@@ -17,4 +17,8 @@ app.use(express.static("public")); //agar files store karni hai toh static folde
 
 app.use(cookieParser()); //options not majorly used
 
+import userRouter from "./routes/user.routes.js"
+
+app.use("/api/v1/user",userRouter)
+
 export default app;   
