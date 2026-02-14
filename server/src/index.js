@@ -24,13 +24,3 @@ connectDB() //since async function thereore it returns promise
 .catch((error)=>{
     console.log("Failed to connect DB , exiting now...",error)
 })
-
-    
-// │     ├── user.model.js
-// │     ├── document.model.js
-// │     ├── flashcard.model.js
-// │     ├── quiz.model.js
-// │     ├── quizQuestion.model.js
-// │     ├── quizAttempt.model.js
-// │     ├── chatSession.model.js
-// │     └── chatMessage.model.js
