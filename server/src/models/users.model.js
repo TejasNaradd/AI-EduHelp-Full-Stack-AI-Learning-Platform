@@ -24,8 +24,15 @@ const userSchema=new Schema({
     },
     password:{
         type:String,
-        required:[true,"password is required"],
         minlenght:6
+    },
+    googleId:{
+        type:String
+    },
+    authProvider:{
+        type:String,
+        enum:["local","google"],
+        default:"local"
     },
     profileImage:{
         url: {
@@ -41,7 +48,7 @@ const userSchema=new Schema({
 },{timestamps:true})
 
 userSchema.pre('save',async function(){
-    if(!this.isModified("password")) return 
+    if(!this.isModified("password") || !this.password) return 
 
     this.password=await bcrypt.hash(this.password,10)
 })
