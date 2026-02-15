@@ -15,7 +15,10 @@ const documentSchema=new Schema({
     },
     description:{
         type:String,
-                trim:true
+        trim:true
+    },
+    text:{
+      type:String
     },
     file_url:{
         type:String,
@@ -52,7 +55,7 @@ const documentSchema=new Schema({
     status: {
       type: String,
       index:true,
-      enum: ["uploaded", "processing", "completed", "failed"],
+      enum: ["uploaded", "processing", "completed", "failed", "text_extracted","summary_generated"],
       default: "uploaded",
     },    
     progress: {
@@ -75,7 +78,7 @@ const documentSchema=new Schema({
     },
 },{timestamps:true})
 
-
 documentSchema.plugin(mongooseAggregatePaginate)
 
 export const Document=mongoose.model("Document",documentSchema)
+

@@ -4,7 +4,6 @@ import ApiError from "../utils/ApiError.js"
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js"
 import {User} from "../models/users.model.js"
 import jwt from "jsonwebtoken"
-import mongoose from "mongoose"
 import { OAuth2Client } from "google-auth-library"
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)

@@ -5,10 +5,12 @@ const uploadOnCloudinary = async (localFilePath, folderName) => {
   try {
     if (!localFilePath) return null;
 
+    const isPDF = folderName === "pdf"; 
+
     const response = await cloudinary.uploader.upload(localFilePath, {
       folder: `eduhelp/${folderName}`,
-      resource_type: 'auto',
-    });
+      resource_type: isPDF ? 'raw' : 'image',
+    }); 
 
     if (fs.existsSync(localFilePath)) {
       fs.unlinkSync(localFilePath);
@@ -40,7 +42,6 @@ const deleteFromCloudinary = async (publicId, resourceType = 'image') => {
 
     return response;
   } catch (error) {
-    console.log('❌ Delete error:', error.message);
     return null;
   }
 };
