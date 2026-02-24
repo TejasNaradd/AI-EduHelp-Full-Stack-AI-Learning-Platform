@@ -2,6 +2,8 @@ import {Router} from "express"
 import { upload } from "../middlewares/multer.middleware.js"
 import { verifyjwt } from "../middlewares/auth.middleware.js"
 import { deleteDoc, generateSummary, getAllDocs, getDoc, getProgress, updateDoc, uploadDocument } from "../controllers/document.controller.js"
+import { generateQuiz, getAllQuiz } from "../controllers/quiz.controller.js"
+import { deleteFlashCard, generateFlashCards, getDocumentFlashCards, openFlashCard } from "../controllers/flashcard.controller.js"
 
 const router=Router()
 
@@ -18,6 +20,18 @@ router.route("/:docId/summary")
     .post(verifyjwt,generateSummary)
 
 router.route("/:docId/progress").get(verifyjwt,getProgress)
+
+router.route("/:docId/quiz")
+    .post(verifyjwt,generateQuiz)
+    .get(verifyjwt,getAllQuiz)
+
+router.route("/:docId/flashcards/generate").post(verifyjwt,generateFlashCards)
+
+router.route("/:docId/flashcards").get(verifyjwt,getDocumentFlashCards)
+
+router.route("/:docId/flashcards/set/:setId")
+        .get(verifyjwt,openFlashCard)
+        .delete(verifyjwt,deleteFlashCard)
 
 
 export default router

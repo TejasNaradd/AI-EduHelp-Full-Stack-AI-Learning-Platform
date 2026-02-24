@@ -1,36 +1,47 @@
-import mongoose ,{Schema} from "mongoose"
+import mongoose, { Schema } from "mongoose";
 
-const flashCardSchema=new Schema({
-    owner:{
-        type:Schema.Types.ObjectId,
-        ref:"User",
-        required:true,
-        index:true,
+const flashCardSchema = new Schema(
+  {
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
     },
-    document:{
-        type:Schema.Types.ObjectId,
-        ref:"Document",
-        required:true,
-        index:true
+    document: {
+      type: Schema.Types.ObjectId,
+      ref: "Document",
+      required: true,
+      index: true,
     },
-    question:{
-        type:String,
-        required:true,
+    setId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      index: true,
     },
-    answer:{
-        type:String,
-        required:true
+    question: {
+      type: String,
+      required: true,
     },
-    difficulty:{
-        type:String,
-        enum:["easy","medium","hard"],
-        default:"medium"
+    answer: {
+      type: String,
+      required: true,
     },
-    topic:{
-        type:String,
-        required:true
-    }
+    difficulty: {
+      type: String,
+      enum: ["easy", "medium", "hard"],
+      default: "medium",
+    },
+    reviewed: {
+      type: Boolean,
+      default: false,
+    },
+    topic: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-},{timestamps:true})
-
-export const FlashCard=mongoose.model("FlashCard",flashCardSchema)
+export const FlashCard = mongoose.model("FlashCard", flashCardSchema);

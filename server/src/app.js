@@ -19,8 +19,12 @@ app.use(cookieParser()); //options not majorly used
 
 import userRouter from "./routes/user.routes.js"
 import documentRouter from "./routes/document.routes.js"
+import quizRouter from "./routes/quiz.routes.js"
+import flashcardRouter from "./routes/flashcard.routes.js"
 
 app.use("/api/v1/user",userRouter)
 app.use("/api/v1/documents",documentRouter)
+app.use("/api/v1/quiz",quizRouter)
+app.use("/api/v1/flashcards",flashcardRouter)
 
 export default app;   
