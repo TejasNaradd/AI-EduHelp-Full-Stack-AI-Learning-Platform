@@ -16,7 +16,11 @@ const chatMsgSchema=new Schema({
         type:String,
         enum:["user","assistant"],
         required:true
-}
+    },
+    order:{
+        type:Number,
+        required:true
+    },
 
 },{timestamps:true})
 

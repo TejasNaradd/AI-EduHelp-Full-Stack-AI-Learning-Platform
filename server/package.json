@@ -23,6 +23,7 @@
     "mongoose": "^9.2.1",
     "mongoose-aggregate-paginate": "^2.0.2",
     "multer": "^2.0.2",
+    "openai": "^6.25.0",
     "pdfjs-dist": "^5.4.624"
   },
   "devDependencies": {

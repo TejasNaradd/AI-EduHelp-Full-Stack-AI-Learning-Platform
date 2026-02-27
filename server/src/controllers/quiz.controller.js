@@ -2,6 +2,7 @@ import { Document } from "../models/document.model.js";
 import { Quiz } from "../models/quiz.model.js";
 import { Attempt } from "../models/quizAttempt.model.js";
 import { Question } from "../models/quizQuestion.model.js";
+import { generateQuizAI } from "../services/ai.services.js";
 
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
@@ -35,26 +36,26 @@ const generateQuiz=asyncHandler(async(req,res)=>{
         status:"processing"
     })
 
-    const selectedTopics=document.topics.slice(0,5)
+    try {
+      const questionsFromAi=await generateQuizAI(document.text,document.topics)
+      const questionData=questionsFromAi.map((q)=>({
+        quiz:quiz._id,
+        question:q.question,
+        options:q.options,
+        correctAnswerIndex:q.answerIndex,
+        topic:q.topic
+      }))      
+      await Question.insertMany(questionData)
 
-    const questionsData = selectedTopics.map((topic) => ({
-    quiz: quiz._id,
-    question: `What is ${topic.name}?`,
-    options: [
-      `${topic.name} Option A`,
-      `${topic.name} Option B`,
-      `${topic.name} Option C`,
-      `${topic.name} Option D`,
-    ],
-    correctAnswerIndex: 0, // temporary dummy correct answer
-    topic: topic.name,
-    }));
+      quiz.totalQuestions=questionData.length
+      quiz.status="completed"
+      await quiz.save()
 
-    await Question.insertMany(questionsData) //multiple questions inserted at once
-
-    quiz.totalQuestions=questionsData.length
-    quiz.status="completed"
-    await quiz.save()
+    } catch (error) {
+      quiz.status="failed"
+      await quiz.save()
+      throw new ApiError(500,"quiz generation failed")
+    }
 
     return res
     .status(200)

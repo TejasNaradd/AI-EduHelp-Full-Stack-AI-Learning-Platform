@@ -2,7 +2,6 @@ import asyncHandler from "../utils/asyncHandler.js"
 import ApiResponse from "../utils/ApiResponse.js"
 import ApiError from "../utils/ApiError.js"
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js"
-import { User } from "../models/users.model.js"
 import { Document } from "../models/document.model.js"
 import { generateSummaryService, processDocument } from "../services/document.services.js"
 

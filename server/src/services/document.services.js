@@ -2,6 +2,7 @@ import axios from "axios";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { Document } from "../models/document.model.js";
 import ApiError from "../utils/ApiError.js";
+import { extractTopicsAI, generateSummary } from "./ai.services.js";
 
 const processDocument = async (docId) => {
   try {
@@ -39,7 +40,7 @@ const processDocument = async (docId) => {
     await Document.findByIdAndUpdate(docId, { status: "failed" });
     throw new ApiError(500, "Error processing document");
   }
-};
+}
 
 const generateSummaryService = async (docId) => {
   const document = await Document.findById(docId);
@@ -52,11 +53,9 @@ const generateSummaryService = async (docId) => {
     throw new Error("Text not extracted yet");
   }
 
-  // 🔥 Basic summary logic (temporary)
-  const summary = document.text.substring(0, 2000);
+  const summary =await generateSummary(document.text)
 
-  // 🔥 Basic topic extraction logic
-  const topics = extractBasicTopics(document.text);
+  const topics = await extractTopicsAI(document.text)
 
   document.summary = summary;
 
@@ -68,18 +67,7 @@ const generateSummaryService = async (docId) => {
   await document.save();
 
   return document;
-};
-
-// Simple topic extraction
-const extractBasicTopics = (text) => {
-  const words = text
-    .split(/\s+/)
-    .filter(word => word.length > 6);
-
-  const unique = [...new Set(words)];
-
-  return unique.slice(0, 5);
-};
+}
 
 export {
     processDocument,

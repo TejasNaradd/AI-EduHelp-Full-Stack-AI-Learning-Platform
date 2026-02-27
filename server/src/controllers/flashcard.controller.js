@@ -1,5 +1,6 @@
 import { Document } from "../models/document.model.js";
 import { FlashCard } from "../models/flashcard.model.js";
+import { generateFlashcardsAI } from "../services/ai.services.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
@@ -30,18 +31,17 @@ const generateFlashCards = asyncHandler(async (req, res) => {
 
     const newSetId = new mongoose.Types.ObjectId()
 
-    const topicsToUse = document.topics.slice(0, 5)
+    const aiCards=await generateFlashcardsAI(document.text,document.topics)
 
-    const flashCardData = topicsToUse.map((topic) => ({
-        owner: req.user._id,
-        document: docId,
-        setId: newSetId,
-        question: `What is ${topic.name}?`,
-        answer: `${topic.name} is a topic covered in the document. It is important to understand this topic to grasp the overall content of the document.`,
-        difficulty: getDifficulty(topic.masteryLevel || 50),
-        topic: topic.name
-    }))
-
+    const flashCardData = aiCards.map(card => ({
+    owner: req.user._id,
+    document: docId,
+    setId: newSetId,
+    question: card.question,
+    answer: card.answer,
+    difficulty: getDifficulty(50),
+    topic: card.topic
+  }))
     await FlashCard.insertMany(flashCardData)
 
     return res.status(201).json(

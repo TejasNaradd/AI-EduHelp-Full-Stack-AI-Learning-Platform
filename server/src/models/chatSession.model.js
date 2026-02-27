@@ -20,4 +20,9 @@ const chatSessionSchema=new Schema({
     }
 },{timestamps:true})
 
+chatSessionSchema.index(
+  { owner: 1, document: 1 },
+  { unique: true }
+);
+
 export const ChatSession=mongoose.model("ChatSession",chatSessionSchema)
