@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import ApiError from "../utils/ApiError.js";
 
 const openai = new OpenAI({
   apiKey: process.env.GROQ_API_KEY,
@@ -208,4 +209,52 @@ Return output in this JSON format:
 
   // ✅ Hard safety max 8
   return parsed.flashcards.slice(0, 8);
+};
+
+export const generateAiResponse = async (text, messages) => {
+  try {
+    const conversation = messages
+      .map((msg) => `${msg.role.toUpperCase()}: ${msg.content}`)
+      .join("\n");
+    const response = await openai.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+      messages: [
+        {
+          role: "system",
+          content: `
+You are EduHelp AI — an intelligent study assistant.
+
+Rules:
+- Use the provided study material as knowledge base.
+- Do NOT copy text directly from the document.
+- Explain clearly in simple language.
+- Provide examples when helpful.
+- If question is outside document, politely say it is not covered.
+- Be structured and concise.
+`,
+        },
+        {
+          role: "user",
+          content: `
+STUDY MATERIAL:
+${text}
+
+CONVERSATION SO FAR:
+${conversation}
+
+Respond to the latest USER message appropriately.
+`,
+        },
+      ],
+      temperature: 0.7,
+    });
+    const reply = response.choices?.[0]?.message?.content?.trim();
+    if (!reply) {
+      throw new ApiError(500, "No response generated from AI");
+    }
+    return reply;
+  } catch (error) {
+    console.error("Chat AI Error:", error.message);
+    throw new ApiError(500,"Failed to generate chat response");
+  }
 };

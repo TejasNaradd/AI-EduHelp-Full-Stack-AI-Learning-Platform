@@ -4,6 +4,7 @@ import { verifyjwt } from "../middlewares/auth.middleware.js"
 import { deleteDoc, generateSummary, getAllDocs, getDoc, getProgress, updateDoc, uploadDocument } from "../controllers/document.controller.js"
 import { generateQuiz, getAllQuiz } from "../controllers/quiz.controller.js"
 import { deleteFlashCard, generateFlashCards, getDocumentFlashCards, openFlashCard } from "../controllers/flashcard.controller.js"
+import { deleteChat, openChat, sendMessages } from "../controllers/chat.controller.js"
 
 const router=Router()
 
@@ -33,5 +34,9 @@ router.route("/:docId/flashcards/set/:setId")
         .get(verifyjwt,openFlashCard)
         .delete(verifyjwt,deleteFlashCard)
 
+router.route("/:docId/chat")
+        .get(verifyjwt,openChat)
+        .post(verifyjwt,sendMessages)
+        .delete(verifyjwt,deleteChat)
 
 export default router
