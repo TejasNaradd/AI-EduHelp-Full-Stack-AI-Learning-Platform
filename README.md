@@ -2,44 +2,49 @@
 
 EduHelp AI is a full-stack AI-powered learning platform designed to transform study materials into structured and interactive learning experiences.
 
-The platform allows users to upload documents and automatically generate summaries, quizzes, flashcards, and contextual AI-driven discussions — all within a single intelligent system built for modern learners.
+The platform allows users to upload documents and automatically generate structured summaries, quizzes, flashcards, and contextual AI-driven discussions. It is designed to improve retention, accelerate revision, and make self-learning more efficient through intelligent automation.
 
----
+EduHelp combines modern web technologies with AI capabilities to create a smart and personalized learning environment.
 
-## 🚀 Core Features
+🚀 Core Features
 
-- AI-based document summarization  
-- Automatic quiz generation  
-- Flashcards with mastery tracking  
-- Context-aware AI tutor chat  
-- Learning progress dashboard  
-- Secure JWT authentication  
+📄 Intelligent document summarization
 
----
+🧠 AI-generated quizzes for self-assessment
 
-## 🛠 Tech Stack
+🗂 Flashcards with mastery-based progression
 
-### Frontend
-- React.js (Vite)
-- React Router
-- Axios
-- React Query
+💬 Context-aware AI tutor chat
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB (Mongoose)
-- JWT Authentication
-- OpenAI API Integration
-- Cloudinary (File Storage)
+📊 Learning progress dashboard
 
----
+🔐 Secure authentication system
 
-<<<<<<< HEAD
-## 📊 Learning Flow
-=======
 🛠 Tech Stack
->>>>>>> 75f0f7ca3c1d261862fce7079098ba4d59987fa5
+
+React.js (Vite)
+
+React Router
+
+Axios
+
+React Query
+
+Node.js
+
+Express.js
+
+MongoDB (Mongoose)
+
+JWT Authentication
+
+OpenAI API Integration
+
+Cloudinary (File Storage)
+
+---
+
+## 📊 Learning Flow
 
 User Authentication  
 ↓  
@@ -67,52 +72,9 @@ MongoDB Database
 ↓  
 AI Services (OpenAI)  
 
-<<<<<<< HEAD
 ---
 
 ## 👨‍💻 Author
-=======
-Node.js
->>>>>>> 75f0f7ca3c1d261862fce7079098ba4d59987fa5
-
-**Tejas Narad**  
-Full Stack Developer | AI Enthusiast  
-
-<<<<<<< HEAD
-Passionate about building scalable, AI-driven web applications that enhance productivity and learning efficiency.
-=======
-MongoDB (Mongoose)
-
-JWT Authentication
-
-OpenAI API Integration
-
-Cloudinary (File Storage)
-
-📊 Learning Flow
-User Authentication
-        ↓
-Upload Document
-        ↓
-AI Processes Content
-        ↓
-Summary + Topic Extraction
-        ↓
-Quiz & Flashcard Generation
-        ↓
-Practice & Track Progress
-        ↓
-AI Chat for Concept Clarity
-🏗 Architecture Overview
-React Frontend
-        ↓
-Express API Layer
-        ↓
-MongoDB Database
-        ↓
-AI Services (OpenAI)
-👨‍💻 Author
 
 Tejas Narad
 Full Stack Developer | AI Enthusiast
->>>>>>> 75f0f7ca3c1d261862fce7079098ba4d59987fa5
