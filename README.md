@@ -21,7 +21,6 @@ EduHelp combines modern web technologies with AI capabilities to create a smart 
 🔐 Secure authentication system
 
 🛠 Tech Stack
-Frontend
 
 React.js (Vite)
 
@@ -30,8 +29,6 @@ React Router
 Axios
 
 React Query
-
-Backend
 
 Node.js
 
