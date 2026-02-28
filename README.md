@@ -1,73 +1,73 @@
-📘 EduHelp AI
+# 📘 EduHelp AI
 
-EduHelp AI is a full-stack AI-powered learning platform that transforms study materials into interactive learning experiences.
+EduHelp AI is a full-stack AI-powered learning platform designed to transform study materials into structured and interactive learning experiences.
 
-The platform allows users to upload documents and automatically generate structured summaries, quizzes, flashcards, and contextual AI-driven discussions. It is designed to improve retention, accelerate revision, and make self-learning more efficient through intelligent automation.
+The platform allows users to upload documents and automatically generate summaries, quizzes, flashcards, and contextual AI-driven discussions — all within a single intelligent system built for modern learners.
 
-EduHelp combines modern web technologies with AI capabilities to create a smart and personalized learning environment.
+---
 
-🚀 Core Features
+## 🚀 Core Features
 
-📄 Intelligent document summarization
+- AI-based document summarization  
+- Automatic quiz generation  
+- Flashcards with mastery tracking  
+- Context-aware AI tutor chat  
+- Learning progress dashboard  
+- Secure JWT authentication  
 
-🧠 AI-generated quizzes for self-assessment
+---
 
-🗂 Flashcards with mastery-based progression
+## 🛠 Tech Stack
 
-💬 Context-aware AI tutor chat
+### Frontend
+- React.js (Vite)
+- React Router
+- Axios
+- React Query
 
-📊 Learning progress dashboard
+### Backend
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT Authentication
+- OpenAI API Integration
+- Cloudinary (File Storage)
 
-🔐 Secure authentication system
+---
 
-🛠 Tech Stack
-Frontend
+## 📊 Learning Flow
 
-React.js (Vite)
+User Authentication  
+↓  
+Upload Document  
+↓  
+AI Processes Content  
+↓  
+Summary + Topic Extraction  
+↓  
+Quiz & Flashcard Generation  
+↓  
+Practice & Track Progress  
+↓  
+AI Chat for Concept Clarity  
 
-React Router
+---
 
-Axios
+## 🏗 Architecture Overview
 
-React Query
+React Frontend  
+↓  
+Express API Layer  
+↓  
+MongoDB Database  
+↓  
+AI Services (OpenAI)  
 
-Backend
+---
 
-Node.js
+## 👨‍💻 Author
 
-Express.js
+**Tejas Narad**  
+Full Stack Developer | AI Enthusiast  
 
-MongoDB (Mongoose)
-
-JWT Authentication
-
-OpenAI API Integration
-
-Cloudinary (File Storage)
-
-📊 Learning Flow
-User Authentication
-        ↓
-Upload Document
-        ↓
-AI Processes Content
-        ↓
-Summary + Topic Extraction
-        ↓
-Quiz & Flashcard Generation
-        ↓
-Practice & Track Progress
-        ↓
-AI Chat for Concept Clarity
-🏗 Architecture Overview
-React Frontend
-        ↓
-Express API Layer
-        ↓
-MongoDB Database
-        ↓
-AI Services (OpenAI)
-👨‍💻 Author
-
-Tejas Narad
-Full Stack Developer | AI Enthusiast
+Passionate about building scalable, AI-driven web applications that enhance productivity and learning efficiency.
