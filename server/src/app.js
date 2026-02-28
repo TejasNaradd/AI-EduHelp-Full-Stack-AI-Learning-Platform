@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser'; //server se user breowser me cookie bhejne k liye can ascess and set cookies read by only server
 import cors from 'cors';
+import ApiError from './utils/ApiError.js';
 
 const app=express();
 
@@ -22,9 +23,27 @@ import documentRouter from "./routes/document.routes.js"
 import quizRouter from "./routes/quiz.routes.js"
 import flashcardRouter from "./routes/flashcard.routes.js"
 
+
 app.use("/api/v1/user",userRouter)
 app.use("/api/v1/documents",documentRouter)
 app.use("/api/v1/quiz",quizRouter)
 app.use("/api/v1/flashcards",flashcardRouter)
 
+
+app.use((err, req, res, next) => {
+  console.error("ERROR:", err);
+
+  if (err instanceof ApiError) {
+    return res.status(err.statusCode).json({
+      success: false,
+      message: err.message,
+      errors: err.errors || [],
+    });
+  }
+
+  return res.status(500).json({
+    success: false,
+    message: "Internal Server Error",
+  });
+});
 export default app;   

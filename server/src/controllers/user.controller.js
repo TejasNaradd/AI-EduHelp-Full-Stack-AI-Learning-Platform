@@ -8,6 +8,11 @@ import { OAuth2Client } from "google-auth-library"
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax"
+};
 
 const generateAccessAndRefresh=async(userId)=>{
     try {
@@ -125,14 +130,10 @@ const loginUser=asyncHandler(async (req,res)=>{
 
     const loggedInUser=await User.findById(user._id).select(" -password -refreshToken ");
 
-    const options={
-        httpOnly:true,
-        secure:true
-   }
    return res
    .status(200)
-   .cookie("accessToken",accessToken,options)
-   .cookie("refreshToken",refreshToken,options)  
+   .cookie("accessToken",accessToken,cookieOptions)
+   .cookie("refreshToken",refreshToken,cookieOptions)  
    .json(
     new ApiResponse(
         200,
@@ -169,8 +170,8 @@ const googleLogin=asyncHandler(async(req,res)=>{
 
         return res
         .status(200)
-        .cookie("accessToken",accessToken,{httpOnly:true,secure:true})
-        .cookie("refreshToken",refreshToken,{httpOnly:true,secure:true})
+        .cookie("accessToken",accessToken,cookieOptions)
+        .cookie("refreshToken",refreshToken,cookieOptions)
         .json(new ApiResponse(
             200,
             {user:loggedInUser,accessToken,refreshToken},

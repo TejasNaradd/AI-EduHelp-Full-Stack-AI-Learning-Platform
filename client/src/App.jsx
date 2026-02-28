@@ -1,12 +1,8 @@
-import { useState } from 'react'
-import './App.css'
-
+import { Outlet } from "react-router-dom";
 function App() {
-
-
   return (
-    <div>
-      <h1 className='bg-blue-500 font-bold text-2xl'>Welcome to EduHelp</h1>
+    <div className="bg-slate-950 text-white min-h-screen">
+      <Outlet />
     </div>
   )
 }
