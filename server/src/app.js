@@ -22,12 +22,13 @@ import userRouter from "./routes/user.routes.js"
 import documentRouter from "./routes/document.routes.js"
 import quizRouter from "./routes/quiz.routes.js"
 import flashcardRouter from "./routes/flashcard.routes.js"
-
+import dashboardRouter from "./routes/dashboard.routes.js"
 
 app.use("/api/v1/user",userRouter)
 app.use("/api/v1/documents",documentRouter)
 app.use("/api/v1/quiz",quizRouter)
 app.use("/api/v1/flashcards",flashcardRouter)
+app.use("/api/v1/dashboard",dashboardRouter)
 
 
 app.use((err, req, res, next) => {

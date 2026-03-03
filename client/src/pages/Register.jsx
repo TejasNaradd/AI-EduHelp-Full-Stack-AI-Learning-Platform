@@ -3,8 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import api from "../api/axios";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Register() {
+  const { fetchUser } = useAuth(); 
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -48,11 +50,11 @@ export default function Register() {
         data.append("profileImage", profileImage);
       }
 
-      await api.post("/register", data, {
+      await api.post("/user/register", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-      navigate("/login");
+      await fetchUser();
+      navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     }
@@ -60,7 +62,7 @@ export default function Register() {
 
   const handleGoogleSignup = async (credentialResponse) => {
     try {
-      await api.post("/google", {
+      await api.post("/user/google", {
         idToken: credentialResponse.credential,
       });
       navigate("/dashboard");

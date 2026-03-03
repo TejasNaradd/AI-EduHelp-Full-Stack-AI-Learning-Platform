@@ -10,7 +10,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: false,
   sameSite: "lax"
 };
 
@@ -91,6 +91,7 @@ const registerUser=asyncHandler(async(req,res)=>{
             throw new ApiError(400,"User not created")
         }
 
+  const { accessToken, refreshToken } = await generateAccessAndRefresh(user._id);
 
     const createdUser=await User.findById(user._id).select(
         "-password -refreshToken"
@@ -98,8 +99,10 @@ const registerUser=asyncHandler(async(req,res)=>{
 
     return res
     .status(201)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
     .json(
-        new ApiResponse(201,createdUser,"User created successfully")
+        new ApiResponse(201,createdUser,"User created and logged In successfully")
     )
 })
 

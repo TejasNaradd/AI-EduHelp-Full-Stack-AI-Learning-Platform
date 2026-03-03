@@ -8,7 +8,13 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Landing from './pages/Landing.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
-
+import Dashboard from './pages/Dashboard.jsx'
+import Documents from './pages/Documents.jsx'
+import Profile from './pages/Profile.jsx'
+import AuthLayout from './layouts/AuthLayouts.jsx';
+import { AuthProvider } from './context/AuthContext.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import FlashCard from './pages/FlashCard.jsx';
 
 const router=createBrowserRouter([
   {
@@ -28,27 +34,41 @@ const router=createBrowserRouter([
         element:<Register/>
       }
     ],
+  },
+  {
+    path:"/",
+    element:(    
+    <ProtectedRoute>
+      <AuthLayout />
+    </ProtectedRoute>
+    ),
+    children:[
+      {path:"dashboard",element:<Dashboard/>},
+      {path:"documents",element:<Documents/>},
+      {path:"flashcards",element:<FlashCard/>},
+      {path:"profile",element:<Profile/>},
+    ]
   }
 ])
 
 
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-        <>
-    <RouterProvider router={router} />
-    <Toaster
-      position="top-right"
-      toastOptions={{
-        style: {
-          background: "#1e293b",
-          color: "#fff",
-          border: "1px solid #334155",
-        },
-      }}
-    />
-  </>
+      <AuthProvider>
+        <RouterProvider router={router} />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: "#1e293b",
+              color: "#fff",
+              border: "1px solid #334155",
+            },
+          }}
+        />
+      </AuthProvider>
     </GoogleOAuthProvider>
-  </StrictMode>,
-)
+  </StrictMode>
+);

@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import api from "../api/axios";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { fetchUser } = useAuth(); // ✅ important
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -26,7 +28,10 @@ export default function Login() {
         payload.username = identifier;
       }
 
-      const res = await api.post("/login", payload);
+      await api.post("/user/login", payload);
+
+      // ✅ refresh auth user immediately
+      await fetchUser();
 
       navigate("/dashboard");
 
@@ -44,9 +49,12 @@ export default function Login() {
     setLoading(true);
 
     try {
-      await api.post("/google", {
+      await api.post("/user/google", {
         idToken: credentialResponse.credential,
       });
+
+      // ✅ refresh auth user
+      await fetchUser();
 
       navigate("/dashboard");
 
@@ -70,7 +78,6 @@ export default function Login() {
           Welcome Back
         </h2>
 
-        {/* 🔴 Inline Error Message */}
         {errorMsg && (
           <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500 text-red-400 text-sm">
             {errorMsg}
