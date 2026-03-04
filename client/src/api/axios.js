@@ -1,11 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api/v1",
-  withCredentials: true, // important for cookies
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  withCredentials: true,
 });
 
-// RESPONSE INTERCEPTOR
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -13,20 +12,16 @@ api.interceptors.response.use(
 
     if (
       error.response?.status === 401 &&
-      !originalRequest._retry
+      !originalRequest._retry &&
+      !originalRequest.url.includes("/user/refresh-token")
     ) {
       originalRequest._retry = true;
 
       try {
-        await axios.post(
-          "http://localhost:8000/api/v1/user/refresh-token",
-          {},
-          { withCredentials: true }
-        );
-
-        return api(originalRequest); // retry original request
+        await api.post("/user/refresh-token");
+        return api(originalRequest);
       } catch (err) {
-        window.location.href = "/login";
+        return Promise.reject(err);
       }
     }
 

@@ -16,59 +16,62 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import FlashCard from './pages/FlashCard.jsx';
 
-const router=createBrowserRouter([
+const router = createBrowserRouter([
   {
-    path:"/",
-    element:<App/>,
-    children:[
+    path: "/",
+    element: (
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    ),
+    children: [
       {
-        index:true,
-        element:<Landing/>
+        index: true,
+        element: <Landing />
       },
       {
-        path:"login",
-        element:<Login/>
+        path: "login",
+        element: <Login />
       },
       {
-        path:"register",
-        element:<Register/>
+        path: "register",
+        element: <Register />
       }
     ],
   },
   {
-    path:"/",
-    element:(    
-    <ProtectedRoute>
-      <AuthLayout />
-    </ProtectedRoute>
+    path: "/",
+    element: (
+      <AuthProvider>
+        <ProtectedRoute>
+          <AuthLayout />
+        </ProtectedRoute>
+      </AuthProvider>
     ),
-    children:[
-      {path:"dashboard",element:<Dashboard/>},
-      {path:"documents",element:<Documents/>},
-      {path:"flashcards",element:<FlashCard/>},
-      {path:"profile",element:<Profile/>},
+    children: [
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "documents", element: <Documents /> },
+      { path: "documents/:docId", element: <Documents /> },
+      { path: "flashcards", element: <FlashCard /> },
+      { path: "profile", element: <Profile /> },
     ]
   }
-])
-
-
+]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: "#1e293b",
-              color: "#fff",
-              border: "1px solid #334155",
-            },
-          }}
-        />
-      </AuthProvider>
+      <RouterProvider router={router} />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#1e293b",
+            color: "#fff",
+            border: "1px solid #334155",
+          },
+        }}
+      />
     </GoogleOAuthProvider>
   </StrictMode>
 );

@@ -18,7 +18,7 @@ export default function Sidebar() {
     } catch {}
 
     setUser(null);
-    navigate("/login");
+    navigate("/", { replace: true });
   };
 
   return (

@@ -50,28 +50,23 @@ const uploadDocument=asyncHandler(async(req,res)=>{
 
 })
 
-const getAllDocs=asyncHandler(async (req,res)=>{
+const getAllDocs = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
 
-    const userId = req.user._id;
-    const {
-        page = 1,
-        limit = 10,
-        status,
-        search,
-        sort = "latest"
-    } = req.query;
+  const {
+    page = 1,
+    limit = 10,
+    status,
+    search,
+    sort = "latest"
+  } = req.query;
 
-  // Base filter: only logged-in user's documents
-  const matchStage = {
-    owner: userId
-  };
+  const matchStage = { owner: userId };
 
-  // Optional status filter
   if (status) {
     matchStage.status = status;
   }
 
-  // Optional search filter
   if (search) {
     matchStage.$or = [
       { title: { $regex: search, $options: "i" } },
@@ -79,17 +74,54 @@ const getAllDocs=asyncHandler(async (req,res)=>{
     ];
   }
 
-  // Sorting logic
-  let sortStage = { createdAt: -1 }; // default latest
-
+  let sortStage = { createdAt: -1 };
   if (sort === "oldest") {
     sortStage = { createdAt: 1 };
   }
 
-  const aggregate = Document.aggregate([
-    { $match: matchStage },
-    { $sort: sortStage }
-  ]);
+const aggregate = Document.aggregate([
+  { $match: matchStage },
+  { $sort: sortStage },
+
+  {
+    $lookup: {
+      from: "quizzes",
+      localField: "_id",
+      foreignField: "document",
+      as: "quizzes"
+    }
+  },
+
+  {
+    $lookup: {
+      from: "flashcards",
+      let: { docId: "$_id" },
+      pipeline: [
+        { $match: { $expr: { $eq: ["$document", "$$docId"] } } },
+        {
+          $group: {
+            _id: "$setId"
+          }
+        }
+      ],
+      as: "flashcardSets"
+    }
+  },
+
+  {
+    $addFields: {
+      quizCount: { $size: "$quizzes" },
+      flashcardSetCount: { $size: "$flashcardSets" }
+    }
+  },
+
+  {
+    $project: {
+      quizzes: 0,
+      flashcardSets: 0
+    }
+  }
+]);
 
   const options = {
     page: parseInt(page),
@@ -98,9 +130,7 @@ const getAllDocs=asyncHandler(async (req,res)=>{
 
   const documents = await Document.aggregatePaginate(aggregate, options);
 
-  return res
-  .status(200)
-  .json(
+  return res.status(200).json(
     new ApiResponse(200, documents, "Documents fetched successfully")
   );
 })

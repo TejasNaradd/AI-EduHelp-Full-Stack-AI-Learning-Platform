@@ -10,8 +10,8 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 const cookieOptions = {
   httpOnly: true,
-  secure: false,
-  sameSite: "lax"
+  secure: process.env.NODE_ENV === "production",
+  sameSite:  process.env.NODE_ENV === "production" ? "none" : "lax",
 };
 
 const generateAccessAndRefresh=async(userId)=>{
@@ -263,17 +263,12 @@ const refreshAccessToken=asyncHandler(async(req,res)=>{
        if(incomingRefreshToken!==user?.refreshToken){
         throw new ApiError(401,"Invalid refresh is expired or used");
        }
-    
-       const options={
-        httpOnly:true,
-        secure:true
-       }
-    
+        
        const {accessToken,refreshToken}=await generateAccessAndRefresh(user._id)
        return res
        .status(200)
-       .cookie("accessToken",accessToken,options)
-       .cookie("refreshToken",refreshToken,options)  
+       .cookie("accessToken",accessToken,cookieOptions)
+       .cookie("refreshToken",refreshToken,cookieOptions)  
        .json(
         new ApiResponse(
             200,
