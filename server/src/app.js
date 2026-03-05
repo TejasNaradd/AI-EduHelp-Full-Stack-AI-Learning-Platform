@@ -5,6 +5,7 @@ import ApiError from './utils/ApiError.js';
 
 const app=express();
 
+app.set("trust proxy", 1);
 //use is used for middlewares and configurations
 app.use(cors({
     origin:process.env.CORS_ORIGIN, //star for allowing all origins

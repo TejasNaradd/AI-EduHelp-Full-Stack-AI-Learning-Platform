@@ -192,13 +192,84 @@ const deleteFlashCard=asyncHandler(async(req,res)=>{
     )
 })
 
-const getAllFlashCards=asyncHandler(async(req,res)=>{
-        const sets = await FlashCard.aggregate([
+// const getAllFlashCards=asyncHandler(async(req,res)=>{
+//         const sets = await FlashCard.aggregate([
+//         {
+//             $match: {
+//                 owner: req.user._id
+//             }
+//         },
+//         {
+//             $group: {
+//                 _id: "$setId",
+//                 document: { $first: "$document" },
+//                 totalCards: { $sum: 1 },
+//                 reviewedCards: {
+//                     $sum: { $cond: ["$reviewed", 1, 0] }
+//                 },
+//                 createdAt: { $first: "$createdAt" }
+//             }
+//         },
+//         {
+//             $addFields: {
+//                 progress: {
+//                     $cond: [
+//                         { $eq: ["$totalCards", 0] },
+//                         0,
+//                         {
+//                             $round: [
+//                                 {
+//                                     $multiply: [
+//                                         { $divide: ["$reviewedCards", "$totalCards"] },
+//                                         100
+//                                     ]
+//                                 },
+//                                 0
+//                             ]
+//                         }
+//                     ]
+//                 }
+//             }
+//         },
+//         {
+//             $project: {
+//                 _id: 0,
+//                 setId: "$_id",
+//                 document: {
+//                     _id: "$document._id",
+//                     title: "$document.title"
+//                 },
+//                 totalCards: 1,
+//                 reviewedCards: 1,
+//                 progress: 1,
+//                 createdAt: 1
+//             }
+//         },
+//         { $sort: { createdAt: -1 } }
+//     ])
+
+//     return res.status(200).json(
+//         new ApiResponse(
+//             200,
+//             {
+//                 totalSets: sets.length,
+//                 sets
+//             },
+//             "All flashcard sets fetched successfully"
+//         )
+//     )
+// })
+
+const getAllFlashCards = asyncHandler(async(req,res)=>{
+
+    const sets = await FlashCard.aggregate([
+
         {
             $match: {
                 owner: req.user._id
             }
         },
+
         {
             $group: {
                 _id: "$setId",
@@ -210,6 +281,22 @@ const getAllFlashCards=asyncHandler(async(req,res)=>{
                 createdAt: { $first: "$createdAt" }
             }
         },
+
+        /* NEW PART - GET DOCUMENT TITLE */
+
+        {
+            $lookup: {
+                from: "documents",
+                localField: "document",
+                foreignField: "_id",
+                as: "documentData"
+            }
+        },
+
+        {
+            $unwind: "$documentData"
+        },
+
         {
             $addFields: {
                 progress: {
@@ -231,18 +318,25 @@ const getAllFlashCards=asyncHandler(async(req,res)=>{
                 }
             }
         },
+
         {
             $project: {
                 _id: 0,
                 setId: "$_id",
-                document: 1,
                 totalCards: 1,
                 reviewedCards: 1,
                 progress: 1,
-                createdAt: 1
+                createdAt: 1,
+
+                document: {
+                    _id: "$documentData._id",
+                    title: "$documentData.title"
+                }
             }
         },
+
         { $sort: { createdAt: -1 } }
+
     ])
 
     return res.status(200).json(
@@ -257,11 +351,43 @@ const getAllFlashCards=asyncHandler(async(req,res)=>{
     )
 })
 
+const markCardReviewed = asyncHandler(async (req,res)=>{
+
+    const { cardId } = req.params
+
+    const card = await FlashCard.findOneAndUpdate(
+        {
+            _id: cardId,
+            owner: req.user._id
+        },
+        {
+            reviewed: true
+        },
+        {
+            new: true
+        }
+    )
+
+    if(!card){
+        throw new ApiError(404,"Flashcard not found")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            card,
+            "Flashcard marked as reviewed"
+        )
+    )
+})
+
+
 export {
     generateFlashCards,
     getDocumentFlashCards,
     openFlashCard,
     deleteFlashCard,
     getAllFlashCards,
+    markCardReviewed
     
 }

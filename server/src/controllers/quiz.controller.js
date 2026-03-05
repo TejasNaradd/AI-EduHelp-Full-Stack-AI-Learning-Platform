@@ -71,27 +71,67 @@ const generateQuiz=asyncHandler(async(req,res)=>{
     )
 })
 
-const getAllQuiz=asyncHandler(async(req,res)=>{
-    const {docId}=req.params
+// const getAllQuiz=asyncHandler(async(req,res)=>{
+//     const {docId}=req.params
 
-    const document=await Document.findOne({
-        _id:docId,
-        owner:req.user._id
-    })
-    if(!document){
-        throw new ApiError(404,"Document not found or access denied")
-    }
+//     const document=await Document.findOne({
+//         _id:docId,
+//         owner:req.user._id
+//     })
+//     if(!document){
+//         throw new ApiError(404,"Document not found or access denied")
+//     }
     
-    const quizzes=await Quiz.find({
-        document:docId,
-        owner:req.user._id
-    }).sort({createdAt:-1})
+//     const quizzes=await Quiz.find({
+//         document:docId,
+//         owner:req.user._id
+//     }).sort({createdAt:-1})
 
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(200,quizzes,"Quizzes retrieved successfully")
+//     return res
+//     .status(200)
+//     .json(
+//         new ApiResponse(200,quizzes,"Quizzes retrieved successfully")
+//     )
+// })
+
+const getAllQuiz = asyncHandler(async (req, res) => {
+  const { docId } = req.params;
+
+  const document = await Document.findOne({
+    _id: docId,
+    owner: req.user._id,
+  });
+
+  if (!document) {
+    throw new ApiError(404, "Document not found or access denied");
+  }
+
+  const quizzes = await Quiz.find({
+    document: docId,
+    owner: req.user._id,
+  }).sort({ createdAt: -1 });
+
+  const quizzesWithAttempts = await Promise.all(
+    quizzes.map(async (quiz) => {
+      const latestAttempt = await Attempt.findOne({
+        quiz: quiz._id,
+        owner: req.user._id,
+      }).sort({ createdAt: -1 });
+
+      return {
+        ...quiz.toObject(),
+        latestAttempt,
+      };
+    })
+  );
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      quizzesWithAttempts,
+      "Quizzes retrieved successfully"
     )
+  );
 })
 
 const getQuiz=asyncHandler(async(req,res)=>{

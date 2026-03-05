@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import api from "../api/axios";
+import { Outlet } from "react-router-dom";
 
 import DocumentGrid from "../components/documents/DocumentGrid";
 import DocumentTabs from "../components/documents/DocumentTabs";
@@ -56,14 +57,18 @@ export default function Documents() {
   if (docId) {
     return (
       <div className="space-y-6">
+
         <button
-          onClick={() => navigate("/documents")}
+          onClick={() => navigate(`/documents`)}
           className="text-blue-400 hover:text-blue-300 transition"
         >
           ← Back to Documents
         </button>
 
-        <DocumentTabs documentId={docId} />
+        <DocumentTabs />
+
+        <Outlet />
+
       </div>
     );
   }

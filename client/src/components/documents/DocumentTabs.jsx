@@ -1,77 +1,91 @@
-import { useState } from "react";
-import {
-  FileText,
-  ScrollText,
-  MessageSquare,
-  Brain,
-  Layers
-} from "lucide-react";
+import { NavLink, Routes, Route, Navigate, useParams } from "react-router-dom";
+import { FileText, FileTextIcon, MessageSquare, Brain, Layers } from "lucide-react";
+import ContentTab from "./tabs/ContentTab";
+import SummaryTab from "./tabs/SummaryTab";
+import ChatTab from "./tabs/ChatTab";
+import QuizTab from "./tabs/QuizTab";
+import FlashcardsTab from "./tabs/FlashcardsTab";
 
-import DocumentContent from "./DocumentContent";
-import SummarySection from "./SummarySection";
-import ChatSection from "./ChatSection";
-import QuizSection from "./QuizSection";
-import FlashcardSection from "./FlashcardSection";
+export default function DocumentTabs() {
+  const { docId } = useParams();
 
-export default function DocumentTabs({ document }) {
-  const [activeTab, setActiveTab] = useState("content");
+  const base =
+    "flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition";
 
-const tabs = [
-  { id: "content", label: "Content", icon: FileText },
-  { id: "summary", label: "Summary", icon: ScrollText },
-  { id: "chat", label: "Chat", icon: MessageSquare },
-  { id: "quiz", label: "Quiz", icon: Brain },
-  { id: "flashcards", label: "Flashcards", icon: Layers }
-];
+  const active =
+    "bg-slate-800 text-white shadow";
 
-  const renderTab = () => {
-    switch (activeTab) {
-      case "content":
-        return <DocumentContent document={document} />;
-      case "summary":
-        return <SummarySection document={document} />;
-      case "chat":
-        return <ChatSection document={document} />;
-      case "quiz":
-        return <QuizSection document={document} />;
-      case "flashcards":
-        return <FlashcardsSection document={document} />;
-      default:
-        return null;
-    }
-  };
+  const inactive =
+    "text-slate-400 hover:text-white hover:bg-slate-900";
 
   return (
-    <div className="w-full mt-6">
+    <div className="space-y-6">
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-gray-800 pb-3">
+      <div className="flex gap-4 border-b border-slate-800 pb-3">
 
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
+        <NavLink
+          to={`/documents/${docId}/content`}
+          className={({ isActive }) =>
+            `${base} ${isActive ? active : inactive}`
+          }
+        >
+          <FileText size={16} />
+          Content
+        </NavLink>
 
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition
-              
-              ${activeTab === tab.id
-                ? "bg-[#0f172a] text-blue-400"
-                : "text-gray-400 hover:text-white hover:bg-[#0f172a]"}
-              `}
-            >
-              <Icon size={16} />
-              {tab.label}
-            </button>
-          );
-        })}
+        <NavLink
+          to={`/documents/${docId}/summary`}
+          className={({ isActive }) =>
+            `${base} ${isActive ? active : inactive}`
+          }
+        >
+          <FileTextIcon size={16} />
+          Summary
+        </NavLink>
+
+        <NavLink
+          to={`/documents/${docId}/chat`}
+          className={({ isActive }) =>
+            `${base} ${isActive ? active : inactive}`
+          }
+        >
+          <MessageSquare size={16} />
+          Chat
+        </NavLink>
+
+        <NavLink
+          to={`/documents/${docId}/quiz`}
+          className={({ isActive }) =>
+            `${base} ${isActive ? active : inactive}`
+          }
+        >
+          <Brain size={16} />
+          Quiz
+        </NavLink>
+
+        <NavLink
+          to={`/documents/${docId}/flashcards`}
+          className={({ isActive }) =>
+            `${base} ${isActive ? active : inactive}`
+          }
+        >
+          <Layers size={16} />
+          Flashcards
+        </NavLink>
+
       </div>
 
-      {/* Tab Content */}
-      <div className="mt-6 bg-[#0f172a] border border-gray-800 rounded-xl p-6 min-h-[520px]">
-        {renderTab()}
-      </div>
+      {/* Routes */}
+        <Routes>
+        <Route index element={<Navigate to="content" replace />} />
+        <Route path="content" element={<ContentTab />} />
+        <Route path="summary" element={<SummaryTab />} />
+        <Route path="chat" element={<ChatTab />} />
+        <Route path="quiz" element={<QuizTab />} />
+        <Route path="flashcards/*" element={<FlashcardsTab />} />
+        </Routes>
+
     </div>
   );
 }

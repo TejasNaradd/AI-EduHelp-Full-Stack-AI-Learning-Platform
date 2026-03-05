@@ -34,15 +34,15 @@ export default function DocumentCard({ doc, refresh }) {
     const days = Math.floor(hours / 24);
 
     if (minutes < 1) return "Last opened just now";
-    if (minutes < 60) return `Last opened ${minutes} min ago`;
-    if (hours < 24) return `Last opened ${hours} hour${hours > 1 ? "s" : ""} ago`;
-    if (days === 1) return "Last opened yesterday";
-    if (days < 7) return `Last opened ${days} days ago`;
+    if (minutes < 60) return `${minutes} min ago`;
+    if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    if (days === 1) return "yesterday";
+    if (days < 7) return `${days} days ago`;
 
-    return `Last opened ${past.toLocaleDateString("en-US", {
+    return past.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric"
-    })}`;
+    });
   };
 
   const lastAccessed = formatRelativeTime(doc.progress?.lastAccessed);
@@ -58,6 +58,13 @@ export default function DocumentCard({ doc, refresh }) {
     }
   };
 
+  const score = doc.progress?.overallScore
+    ? Math.round(doc.progress.overallScore)
+    : null;
+
+  const weakTopics =
+    doc.progress?.weakTopics?.slice(0, 2) || [];
+
   return (
     <>
       <div
@@ -67,14 +74,15 @@ export default function DocumentCard({ doc, refresh }) {
         rounded-3xl overflow-hidden
         bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800
         border border-slate-800
-        shadow-md
-        hover:shadow-blue-500/15
+        shadow-lg
+        hover:shadow-blue-500/40
         hover:-translate-y-1
         transition-all duration-300
         group
       "
       >
         {/* PDF Preview */}
+
         <div className="h-44 bg-slate-800 overflow-hidden relative rounded-t-3xl">
           {doc.file_url ? (
             <iframe
@@ -88,50 +96,59 @@ export default function DocumentCard({ doc, refresh }) {
             </div>
           )}
 
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-slate-900/70 to-transparent" />
         </div>
 
         {/* Content */}
+
         <div className="p-6 space-y-5">
 
           {/* Title + Menu */}
+
           <div className="flex justify-between items-start">
-            <div>
-              <h2 className="text-lg font-semibold text-white tracking-wide">
-                {doc.title}
+
+            <div className="flex-1">
+
+              <h2 className="text-lg font-semibold text-white tracking-wide line-clamp-2">
+                {doc.title || "Untitled Document"}
               </h2>
 
-<div className="flex items-center gap-6 mt-2 text-sm text-slate-400">
+              <div className="flex items-center gap-6 mt-2 text-sm text-slate-400">
 
-  <div className="flex items-center gap-1.5">
-    <FileText size={14} className="text-slate-500" />
-    <span>{formattedDate}</span>
-  </div>
+                <div className="flex items-center gap-1.5">
+                  <FileText size={14} className="text-slate-500" />
+                  <span>{formattedDate}</span>
+                </div>
 
-  <div className="flex items-center gap-1.5">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="text-slate-500"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </svg>
+                <div className="flex items-center gap-1.5">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-slate-500"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
 
-    <span>{lastAccessed.replace("Last opened ", "")}</span>
-  </div>
+                  <span>{lastAccessed}</span>
 
-</div>
+                </div>
+
+              </div>
+
             </div>
 
+            {/* Menu */}
+
             <div className="relative">
+
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -144,6 +161,7 @@ export default function DocumentCard({ doc, refresh }) {
 
               {openMenu && (
                 <div className="absolute right-0 mt-2 w-36 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-20">
+
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -160,12 +178,16 @@ export default function DocumentCard({ doc, refresh }) {
                   >
                     <Trash2 size={14} /> Delete
                   </button>
+
                 </div>
               )}
+
             </div>
+
           </div>
 
           {/* Stats */}
+
           <div className="flex items-center justify-between pt-3 border-t border-slate-800 text-sm">
 
             <div className="flex items-center gap-2 text-purple-400">
@@ -184,21 +206,51 @@ export default function DocumentCard({ doc, refresh }) {
 
           </div>
 
+          {/* Progress */}
+
+          {(score || weakTopics.length > 0) && (
+            <div className="text-xs text-slate-400 space-y-1">
+
+              {score && (
+                <div>
+                  Score:{" "}
+                  <span className="text-green-400 font-medium">
+                    {score}%
+                  </span>
+                </div>
+              )}
+
+              {weakTopics.length > 0 && (
+                <div>
+                  Weak:{" "}
+                  <span className="text-red-400">
+                    {weakTopics.map(t => t.name).join(", ")}
+                  </span>
+                </div>
+              )}
+
+            </div>
+          )}
+
           {/* Status */}
+
           <div>
-            <span className="
-            text-xs 
-            px-3 py-1 
-            rounded-full 
-            bg-green-500/10 
-            text-green-400 
-            border border-green-500/20
-          ">
+            <span
+              className="
+              text-xs 
+              px-3 py-1 
+              rounded-full 
+              bg-green-500/10 
+              text-green-400 
+              border border-green-500/20
+            "
+            >
               Uploaded
             </span>
           </div>
 
         </div>
+
       </div>
 
       <EditDocumentModal

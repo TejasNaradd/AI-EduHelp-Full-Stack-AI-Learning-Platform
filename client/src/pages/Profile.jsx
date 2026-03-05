@@ -1,11 +1,23 @@
-import React from 'react'
+import ProfileHeader from "../components/profile/ProfileHeader";
+import ProfileForm from "../components/profile/ProfileForm";
+import ChangePasswordCard from "../components/profile/ChangePasswordCard";
 
-function Profile() {
+export default function Profile() {
+
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <div className="max-w-5xl mx-auto p-6 space-y-6">
 
-export default Profile
+      <h1 className="text-2xl font-semibold text-white">
+        Profile Settings
+      </h1>
+
+      <ProfileHeader />
+
+      <ProfileForm />
+
+      <ChangePasswordCard />
+
+    </div>
+  );
+
+}

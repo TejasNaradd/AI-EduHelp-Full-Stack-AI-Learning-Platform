@@ -14,7 +14,8 @@ import Profile from './pages/Profile.jsx'
 import AuthLayout from './layouts/AuthLayouts.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import FlashCard from './pages/FlashCard.jsx';
+import FlashCard from './pages/Flashcards.jsx';
+import FlashcardViewer from './components/flashcards/FlashcardViewer.jsx';
 
 const router = createBrowserRouter([
   {
@@ -51,9 +52,11 @@ const router = createBrowserRouter([
     children: [
       { path: "dashboard", element: <Dashboard /> },
       { path: "documents", element: <Documents /> },
-      { path: "documents/:docId", element: <Documents /> },
+      { path: "documents/:docId/*", element: <Documents /> },
       { path: "flashcards", element: <FlashCard /> },
+      { path: "flashcards/:docId/:setId", element: <FlashcardViewer /> },
       { path: "profile", element: <Profile /> },
+      
     ]
   }
 ]);

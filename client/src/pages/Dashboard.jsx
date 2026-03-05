@@ -40,17 +40,9 @@ export default function Dashboard() {
     <div className="space-y-8">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-        <StatCard
-          title="Documents"
-          value={stats.documents}
-          icon={FileText}
-        />
+        <StatCard title="Documents" value={stats.documents} icon={FileText} />
 
-        <StatCard
-          title="Quizzes"
-          value={stats.quizzes}
-          icon={Brain}
-        />
+        <StatCard title="Quizzes" value={stats.quizzes} icon={Brain} />
 
         <StatCard
           title="Flashcard Sets"
@@ -78,34 +70,31 @@ export default function Dashboard() {
       />
 
       {/* Recent Activity */}
-<div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col h-[350px]">
-  <h3 className="text-lg font-semibold mb-4 shrink-0">
-    Recent Activity
-  </h3>
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col h-[350px]">
+        <h3 className="text-lg font-semibold mb-4 shrink-0">Recent Activity</h3>
 
-  <div className="flex-1 overflow-y-auto space-y-4 pr-2">
-    {stats.recentActivity?.length > 0 ? (
-      stats.recentActivity.map((item, index) => (
-        <div
-          key={index}
-          className="flex justify-between items-start border-b border-slate-800 pb-3"
-        >
-          <p className="text-slate-300 text-sm">
-            {item.message}
-          </p>
-          <span className="text-xs text-slate-500 whitespace-nowrap">
-            {new Date(item.createdAt).toLocaleDateString()}
-          </span>
+        <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+          {stats.recentActivity?.length > 0 ? (
+            stats.recentActivity.map((item, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-start border-b border-slate-800 pb-3"
+              >
+                <p className="text-slate-300 text-sm">{item.message}</p>
+                <span className="text-xs text-slate-500 whitespace-nowrap">
+                  {new Date(item.createdAt).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "2-digit",
+                  })}
+                </span>
+              </div>
+            ))
+          ) : (
+            <p className="text-slate-500 text-sm">No recent activity yet.</p>
+          )}
         </div>
-      ))
-    ) : (
-      <p className="text-slate-500 text-sm">
-        No recent activity yet.
-      </p>
-    )}
-  </div>
-</div>
-
+      </div>
     </div>
   );
 }

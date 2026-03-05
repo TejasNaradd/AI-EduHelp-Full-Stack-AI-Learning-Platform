@@ -12,14 +12,44 @@ export const generateSummary = async (text) => {
     messages: [
       {
         role: "system",
-        content: "You are an expert educational assistant.",
+        content: `
+You are an expert educational assistant that summarizes study documents.
+
+Return the summary in clean Markdown format with proper headings and bullet points.
+
+Rules:
+- Use clear section headings.
+- Use bullet points for lists.
+- Keep explanations concise.
+- Focus on important concepts only.
+- Avoid long paragraphs.
+- Use simple student-friendly language.
+
+Format example:
+
+## Overview
+Short introduction of the topic.
+
+## Key Concepts
+- Concept 1 explanation
+- Concept 2 explanation
+- Concept 3 explanation
+
+## Important Points
+- Key idea 1
+- Key idea 2
+- Key idea 3
+
+## Conclusion
+Short concluding summary.
+`,
       },
       {
         role: "user",
-        content: `Summarize this document clearly:\n\n${text}`,
+        content: `Summarize the following document:\n\n${text}`,
       },
     ],
-    temperature: 0.7,
+    temperature: 0.5,
   });
 
   return response.choices[0].message.content;
