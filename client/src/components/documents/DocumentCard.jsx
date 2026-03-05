@@ -4,7 +4,7 @@ import {
   Trash2,
   Edit,
   Brain,
-  Layers
+  Layers,
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ export default function DocumentCard({ doc, refresh }) {
 
   const formattedDate = new Date(doc.createdAt).toLocaleString("en-US", {
     month: "short",
-    day: "numeric"
+    day: "numeric",
   });
 
   const formatRelativeTime = (date) => {
@@ -41,7 +41,7 @@ export default function DocumentCard({ doc, refresh }) {
 
     return past.toLocaleDateString("en-US", {
       month: "short",
-      day: "numeric"
+      day: "numeric",
     });
   };
 
@@ -62,8 +62,7 @@ export default function DocumentCard({ doc, refresh }) {
     ? Math.round(doc.progress.overallScore)
     : null;
 
-  const weakTopics =
-    doc.progress?.weakTopics?.slice(0, 2) || [];
+  const weakTopics = doc.progress?.weakTopics?.slice(0, 2) || [];
 
   return (
     <>
@@ -102,19 +101,15 @@ export default function DocumentCard({ doc, refresh }) {
         {/* Content */}
 
         <div className="p-6 space-y-5">
-
           {/* Title + Menu */}
 
           <div className="flex justify-between items-start">
-
             <div className="flex-1">
-
               <h2 className="text-lg font-semibold text-white tracking-wide line-clamp-2">
                 {doc.title || "Untitled Document"}
               </h2>
 
               <div className="flex items-center gap-6 mt-2 text-sm text-slate-400">
-
                 <div className="flex items-center gap-1.5">
                   <FileText size={14} className="text-slate-500" />
                   <span>{formattedDate}</span>
@@ -138,17 +133,13 @@ export default function DocumentCard({ doc, refresh }) {
                   </svg>
 
                   <span>{lastAccessed}</span>
-
                 </div>
-
               </div>
-
             </div>
 
             {/* Menu */}
 
             <div className="relative">
-
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -161,7 +152,6 @@ export default function DocumentCard({ doc, refresh }) {
 
               {openMenu && (
                 <div className="absolute right-0 mt-2 w-36 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-20">
-
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -178,18 +168,14 @@ export default function DocumentCard({ doc, refresh }) {
                   >
                     <Trash2 size={14} /> Delete
                   </button>
-
                 </div>
               )}
-
             </div>
-
           </div>
 
           {/* Stats */}
 
           <div className="flex items-center justify-between pt-3 border-t border-slate-800 text-sm">
-
             <div className="flex items-center gap-2 text-purple-400">
               <Brain size={16} />
               <span className="text-slate-300">
@@ -203,54 +189,32 @@ export default function DocumentCard({ doc, refresh }) {
                 {doc.flashcardSetCount || 0} Sets
               </span>
             </div>
-
           </div>
 
-          {/* Progress */}
+          {/* Status + Score */}
 
-          {(score || weakTopics.length > 0) && (
-            <div className="text-xs text-slate-400 space-y-1">
-
-              {score && (
-                <div>
-                  Score:{" "}
-                  <span className="text-green-400 font-medium">
-                    {score}%
-                  </span>
-                </div>
-              )}
-
-              {weakTopics.length > 0 && (
-                <div>
-                  Weak:{" "}
-                  <span className="text-red-400">
-                    {weakTopics.map(t => t.name).join(", ")}
-                  </span>
-                </div>
-              )}
-
-            </div>
-          )}
-
-          {/* Status */}
-
-          <div>
+          <div className="flex items-center justify-between pt-2">
             <span
               className="
-              text-xs 
-              px-3 py-1 
-              rounded-full 
-              bg-green-500/10 
-              text-green-400 
-              border border-green-500/20
-            "
+    text-xs 
+    px-3 py-1 
+    rounded-full 
+    bg-green-500/10 
+    text-green-400 
+    border border-green-500/20
+  "
             >
               Uploaded
             </span>
+
+            {score && (
+              <div className="text-xs text-slate-400">
+                Score:{" "}
+                <span className="text-green-400 font-semibold">{score}%</span>
+              </div>
+            )}
           </div>
-
         </div>
-
       </div>
 
       <EditDocumentModal
