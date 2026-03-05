@@ -6,8 +6,8 @@ import { useParams, useNavigate } from "react-router-dom";
 
 export default function FlashcardViewer() {
 
-  const { docId, setId } = useParams();   // ✅ get params from URL
-  const navigate = useNavigate();         // ✅ for back navigation
+  const { docId, setId } = useParams();  
+  const navigate = useNavigate();        
 
   const [cards, setCards] = useState([]);
   const [index, setIndex] = useState(0);
