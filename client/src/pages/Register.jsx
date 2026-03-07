@@ -189,6 +189,7 @@ export default function Register() {
           theme="filled_black"
           size="large"
           shape="pill"
+          useOneTap={false}
         />
 
         <p className="text-slate-400 text-sm mt-6 text-center">
