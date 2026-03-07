@@ -51,7 +51,10 @@ export default function FlashcardsTab() {
       <FlashcardViewer
         docId={docId}
         setId={activeSet}
-        goBack={() => setActiveSet(null)}
+        goBack={() => {
+          setActiveSet(null);
+          fetchSets();   // refresh sets so progress updates
+        }}
       />
     );
   }
