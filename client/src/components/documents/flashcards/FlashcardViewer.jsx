@@ -34,9 +34,8 @@ export default function FlashcardViewer({ docId, setId, goBack }) {
   const markReviewed = async () => {
     try {
       await api.patch(`/flashcards/review/${card._id}`);
-
       toast.success("Marked as reviewed");
-    } catch (err) {
+    } catch {
       toast.error("Update failed");
     }
   };
@@ -56,73 +55,83 @@ export default function FlashcardViewer({ docId, setId, goBack }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <button onClick={goBack} className="text-gray-400 text-sm">
-        ← Back
-      </button>
+    <div className="max-w-4xl mx-auto flex flex-col h-[70vh]">
 
-      <p className="text-center text-gray-400 text-sm">
-        Card {index + 1} / {cards.length}
-      </p>
+      {/* HEADER */}
 
-      {/* CARD */}
+      <div className="space-y-2 mb-4">
 
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl p-10 text-center space-y-8">
-        {/* QUESTION */}
+        <button onClick={goBack} className="text-gray-400 text-sm">
+          ← Back
+        </button>
 
-        {!showAnswer && (
-          <>
-            <p className="text-blue-400 text-xs tracking-widest font-semibold">
-              QUESTION
-            </p>
+        <p className="text-center text-gray-400 text-sm">
+          Card {index + 1} / {cards.length}
+        </p>
 
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 text-lg text-white">
-              {card.question}
-            </div>
-
-            <button
-              onClick={() => setShowAnswer(true)}
-              className="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg"
-            >
-              Show Answer
-            </button>
-          </>
-        )}
-
-        {/* ANSWER */}
-
-        {showAnswer && (
-          <>
-            <p className="text-green-400 text-xs tracking-widest font-semibold">
-              ANSWER
-            </p>
-
-            <div className="bg-slate-700 border border-slate-600 rounded-xl p-8 text-lg text-white">
-              {card.answer}
-            </div>
-
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => setShowAnswer(false)}
-                className="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-lg"
-              >
-                Back to Question
-              </button>
-
-              <button
-                onClick={markReviewed}
-                className="bg-green-600 hover:bg-green-500 px-5 py-2 rounded-lg"
-              >
-                Mark Reviewed
-              </button>
-            </div>
-          </>
-        )}
       </div>
 
-      {/* NAVIGATION */}
+      {/* SCROLLABLE CARD AREA */}
 
-      <div className="flex justify-between items-center">
+      <div className="flex-1 overflow-y-auto">
+
+        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 text-center space-y-6">
+
+          {!showAnswer && (
+            <>
+              <p className="text-blue-400 text-xs tracking-widest font-semibold">
+                QUESTION
+              </p>
+
+              <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 text-lg text-white">
+                {card.question}
+              </div>
+
+              <button
+                onClick={() => setShowAnswer(true)}
+                className="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg"
+              >
+                Show Answer
+              </button>
+            </>
+          )}
+
+          {showAnswer && (
+            <>
+              <p className="text-green-400 text-xs tracking-widest font-semibold">
+                ANSWER
+              </p>
+
+              <div className="bg-slate-700 border border-slate-600 rounded-xl p-6 text-lg text-white">
+                {card.answer}
+              </div>
+
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => setShowAnswer(false)}
+                  className="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg"
+                >
+                  Back to Question
+                </button>
+
+                <button
+                  onClick={markReviewed}
+                  className="bg-green-600 hover:bg-green-500 px-4 py-2 rounded-lg"
+                >
+                  Mark Reviewed
+                </button>
+              </div>
+            </>
+          )}
+
+        </div>
+
+      </div>
+
+      {/* FIXED NAVIGATION */}
+
+      <div className="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center">
+
         <button
           onClick={prevCard}
           disabled={index === 0}
@@ -148,7 +157,9 @@ export default function FlashcardViewer({ docId, setId, goBack }) {
             <ArrowRight size={16} />
           </button>
         )}
+
       </div>
+
     </div>
   );
 }

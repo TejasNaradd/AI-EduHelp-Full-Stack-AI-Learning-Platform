@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Outlet } from "react-router-dom";
 import { Search } from "lucide-react";
 import api from "../api/axios";
-import { Outlet } from "react-router-dom";
 
 import DocumentGrid from "../components/documents/DocumentGrid";
 import DocumentTabs from "../components/documents/DocumentTabs";
@@ -60,7 +59,7 @@ export default function Documents() {
 
         <button
           onClick={() => navigate(`/documents`)}
-          className="text-blue-400 hover:text-blue-300 transition"
+          className="text-blue-400 hover:text-blue-300 transition text-sm sm:text-base"
         >
           ← Back to Documents
         </button>
@@ -75,12 +74,15 @@ export default function Documents() {
 
   return (
     <div className="space-y-8">
+
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
         <div>
-          <h1 className="text-2xl font-semibold text-white">
+          <h1 className="text-xl sm:text-2xl font-semibold text-white">
             My Documents
           </h1>
+
           <p className="text-slate-400 text-sm mt-1">
             Upload and manage your study materials
           </p>
@@ -88,14 +90,16 @@ export default function Documents() {
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-xl text-white transition"
+          className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-xl text-white transition w-full sm:w-auto"
         >
           + Upload
         </button>
+
       </div>
 
       {/* Search */}
-      <div className="relative w-80">
+      <div className="relative w-full sm:w-80">
+
         <Search
           size={18}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -121,6 +125,7 @@ export default function Documents() {
             transition
           "
         />
+
       </div>
 
       {/* Documents */}

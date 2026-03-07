@@ -18,7 +18,6 @@ export default function QuizTab() {
     try {
 
       const res = await api.get(`/documents/${docId}/quiz`);
-
       setQuizzes(res.data.data);
 
     } catch (err) {
@@ -56,26 +55,32 @@ export default function QuizTab() {
   };
 
   if(activeQuiz){
-    return <QuizPlayer quizId={activeQuiz} goBack={()=>{
-      setActiveQuiz(null); 
-      fetchQuizzes()
-    }} />;
+    return (
+      <QuizPlayer
+        quizId={activeQuiz}
+        goBack={()=>{
+          setActiveQuiz(null);
+          fetchQuizzes();
+        }}
+      />
+    );
   }
 
 return (
   <div className="space-y-6 relative">
 
-    {/* background glow */}
-    <div className="flex justify-between items-center">
+    {/* Header */}
 
-      <h2 className="text-2xl font-semibold flex items-center gap-2">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+      <h2 className="text-xl sm:text-2xl font-semibold flex items-center gap-2">
         <Brain size={22}/>
         Quizzes
       </h2>
 
       <button
         onClick={generateQuiz}
-        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 transition px-4 py-2 rounded-lg text-white"
+        className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 transition px-4 py-2 rounded-lg text-white w-full sm:w-auto"
       >
         <Plus size={16}/>
         Generate Quiz
@@ -83,9 +88,17 @@ return (
 
     </div>
 
-    {loading && <p className="text-gray-400">Loading quizzes...</p>}
+    {/* Loading */}
 
-    <div className="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+    {loading && (
+      <p className="text-gray-400 text-sm">
+        Loading quizzes...
+      </p>
+    )}
+
+    {/* Quiz Grid */}
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
 
       {quizzes.map((quiz)=>(
         <QuizCard

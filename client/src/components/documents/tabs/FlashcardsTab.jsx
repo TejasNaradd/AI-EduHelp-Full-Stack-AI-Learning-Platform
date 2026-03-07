@@ -17,7 +17,6 @@ export default function FlashcardsTab() {
     try {
       const res = await api.get(`/documents/${docId}/flashcards`);
       const setsData = res?.data?.data?.sets || [];
-
       setSets(setsData);
     } catch (err) {
       toast.error("Failed to fetch flashcards");
@@ -33,12 +32,9 @@ export default function FlashcardsTab() {
   const generateFlashcards = async () => {
     try {
       toast.loading("Generating flashcards...");
-
       await api.post(`/documents/${docId}/flashcards/generate`);
-
       toast.dismiss();
       toast.success("Flashcards generated");
-
       fetchSets();
     } catch (err) {
       toast.dismiss();
@@ -53,49 +49,81 @@ export default function FlashcardsTab() {
         setId={activeSet}
         goBack={() => {
           setActiveSet(null);
-          fetchSets();   // refresh sets so progress updates
+          fetchSets();
         }}
       />
     );
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <Layers size={22} />
+    <div className="space-y-6 sm:space-y-8">
+
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <h2 className="text-xl sm:text-2xl font-semibold flex items-center gap-2">
+          <Layers size={20} className="shrink-0" />
           Flashcards
         </h2>
 
         <button
           onClick={generateFlashcards}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg text-white"
+          className="
+          flex items-center justify-center gap-2
+          bg-blue-600 hover:bg-blue-500
+          px-4 py-2 rounded-lg text-white
+          w-full sm:w-auto
+          "
         >
           <Plus size={16} />
           Generate Flashcards
         </button>
+
       </div>
 
-      {loading && <p className="text-gray-400">Loading flashcards...</p>}
-
-      {!loading && sets.length === 0 && (
-        <p className="text-gray-400 text-center mt-12">
-          No flashcards yet. Generate one to start learning.
+      {/* Loading */}
+      {loading && (
+        <p className="text-gray-400 text-sm sm:text-base">
+          Loading flashcards...
         </p>
       )}
 
-      <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8">
-        {sets?.map((set, index) => (
-          <FlashcardSetCard
-            key={set?._id || index}
-            set={set}
-            index={index}
-            docId={docId}
-            refresh={fetchSets}
-            openSet={() => setActiveSet(set._id)}
-          />
-        ))}
-      </div>
+      {/* Empty state */}
+      {!loading && sets.length === 0 && (
+        <div className="text-center mt-10 sm:mt-14">
+          <p className="text-gray-400 text-sm sm:text-base">
+            No flashcards yet. Generate one to start learning.
+          </p>
+        </div>
+      )}
+
+      {/* Grid */}
+      {!loading && sets.length > 0 && (
+        <div
+          className="
+          grid
+          grid-cols-1
+          sm:grid-cols-2
+          lg:grid-cols-2
+          xl:grid-cols-3
+          gap-4
+          sm:gap-6
+          lg:gap-8
+          "
+        >
+          {sets?.map((set, index) => (
+            <FlashcardSetCard
+              key={set?._id || index}
+              set={set}
+              index={index}
+              docId={docId}
+              refresh={fetchSets}
+              openSet={() => setActiveSet(set._id)}
+            />
+          ))}
+        </div>
+      )}
+
     </div>
   );
 }

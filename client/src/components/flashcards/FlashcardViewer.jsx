@@ -65,71 +65,77 @@ export default function FlashcardViewer() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto h-[80vh] flex flex-col">
 
-      <button onClick={goBack} className="text-gray-400 text-sm">
+     <button onClick={goBack} className="text-gray-400 text-sm mb-2 self-start">
         ← Back
       </button>
 
-      <p className="text-center text-gray-400 text-sm">
+      <p className="text-center text-gray-400 text-sm mb-4">
         Card {index + 1} / {cards.length}
       </p>
 
-      {/* CARD */}
+      {/* CARD AREA (SCROLLABLE) */}
 
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl p-10 text-center space-y-8">
+      <div className="flex-1 overflow-y-auto">
 
-        {!showAnswer && (
-          <>
-            <p className="text-blue-400 text-xs tracking-widest font-semibold">
-              QUESTION
-            </p>
+        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-10 text-center space-y-8">
 
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 text-lg text-white">
-              {card.question}
-            </div>
+          {!showAnswer && (
+            <>
+              <p className="text-blue-400 text-xs tracking-widest font-semibold">
+                QUESTION
+              </p>
 
-            <button
-              onClick={() => setShowAnswer(true)}
-              className="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg"
-            >
-              Show Answer
-            </button>
-          </>
-        )}
-
-        {showAnswer && (
-          <>
-            <p className="text-green-400 text-xs tracking-widest font-semibold">
-              ANSWER
-            </p>
-
-            <div className="bg-slate-700 border border-slate-600 rounded-xl p-8 text-lg text-white">
-              {card.answer}
-            </div>
-
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => setShowAnswer(false)}
-                className="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-lg"
-              >
-                Back to Question
-              </button>
+              <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 text-lg text-white">
+                {card.question}
+              </div>
 
               <button
-                onClick={markReviewed}
-                className="bg-green-600 hover:bg-green-500 px-5 py-2 rounded-lg"
+                onClick={() => setShowAnswer(true)}
+                className="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg"
               >
-                Mark Reviewed
+                Show Answer
               </button>
-            </div>
-          </>
-        )}
+            </>
+          )}
+
+          {showAnswer && (
+            <>
+              <p className="text-green-400 text-xs tracking-widest font-semibold">
+                ANSWER
+              </p>
+
+              <div className="bg-slate-700 border border-slate-600 rounded-xl p-8 text-lg text-white">
+                {card.answer}
+              </div>
+
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => setShowAnswer(false)}
+                  className="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-lg"
+                >
+                  Back to Question
+                </button>
+
+                <button
+                  onClick={markReviewed}
+                  className="bg-green-600 hover:bg-green-500 px-5 py-2 rounded-lg"
+                >
+                  Mark Reviewed
+                </button>
+              </div>
+            </>
+          )}
+
+        </div>
+
       </div>
 
-      {/* NAVIGATION */}
+      {/* FIXED NAVIGATION */}
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center pt-4">
+
         <button
           onClick={prevCard}
           disabled={index === 0}
@@ -155,6 +161,7 @@ export default function FlashcardViewer() {
             <ArrowRight size={16} />
           </button>
         )}
+
       </div>
 
     </div>

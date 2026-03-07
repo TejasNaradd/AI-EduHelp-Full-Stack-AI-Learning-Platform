@@ -5,7 +5,6 @@ import { ExternalLink, Download } from "lucide-react";
 
 export default function ContentTab() {
   const { docId } = useParams();
-
   const [doc, setDoc] = useState(null);
 
   useEffect(() => {
@@ -33,13 +32,13 @@ export default function ContentTab() {
     <div className="space-y-4">
 
       {/* Actions */}
-      <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
 
         <a
           href={doc.file_url}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-lg text-sm hover:bg-slate-700 transition"
+          className="flex items-center justify-center sm:justify-start gap-2 bg-slate-800 px-4 py-2 rounded-lg text-sm hover:bg-slate-700 transition"
         >
           <ExternalLink size={16} />
           Open in new tab
@@ -49,7 +48,7 @@ export default function ContentTab() {
           href={doc.file_url}
           target="_blank"
           download
-          className="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-lg text-sm hover:bg-slate-700 transition"
+          className="flex items-center justify-center sm:justify-start gap-2 bg-slate-800 px-4 py-2 rounded-lg text-sm hover:bg-slate-700 transition"
         >
           <Download size={16} />
           Download
@@ -57,13 +56,13 @@ export default function ContentTab() {
 
       </div>
 
-      {/* Viewer */}
-      <div className="h-[78vh] border border-slate-800 rounded-xl overflow-hidden">
+      {/* PDF Viewer */}
+      <div className="w-full border border-slate-800 rounded-xl overflow-hidden shadow-lg">
 
         <iframe
           src={`${doc.file_url}#toolbar=1`}
           title="document"
-          className="w-full h-full"
+          className="w-full h-[60vh] sm:h-[65vh] lg:h-[70vh]"
         />
 
       </div>

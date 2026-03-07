@@ -54,19 +54,48 @@ relative
 
       {/* MENU */}
 
-      <div className="absolute right-4 top-4">
+      <div className="absolute right-3 top-3 z-20">
         <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="text-gray-400 hover:text-white transition"
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuOpen(!menuOpen);
+          }}
+          className="
+p-2
+rounded-lg
+text-gray-400
+hover:text-white
+hover:bg-slate-800
+transition
+"
         >
           <MoreVertical size={18} />
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 mt-2 bg-slate-800 border border-slate-700 rounded-lg shadow-lg">
+          <div
+            className="
+absolute right-0 mt-2
+bg-slate-800
+border border-slate-700
+rounded-lg
+shadow-lg
+min-w-[120px]
+"
+          >
             <button
-              onClick={deleteSet}
-              className="flex items-center gap-2 px-4 py-2 text-red-400 hover:bg-slate-700 w-full text-sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteSet();
+              }}
+              className="
+flex items-center gap-2
+px-4 py-2
+text-red-400
+hover:bg-slate-700
+w-full
+text-sm
+"
             >
               <Trash2 size={14} />
               Delete
@@ -79,20 +108,19 @@ relative
 
       <div className="mb-4">
 
-        {/* DOCUMENT TITLE */}
-
-        <h2 className="
-text-xl font-bold
+        <h2
+          className="
+text-lg sm:text-xl
+font-bold
 text-white
 leading-snug
 tracking-wide
 drop-shadow-sm
 truncate
-">
+"
+        >
           {set?.document?.title}
         </h2>
-
-        {/* SET */}
 
         <p className="text-sm text-gray-400 mt-1">
           Set {index + 1}
@@ -123,7 +151,8 @@ truncate
           {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
         </div>
 
-        <div className="
+        <div
+          className="
 bg-green-600/90
 text-white
 text-xs
@@ -131,7 +160,8 @@ font-semibold
 px-3 py-1
 rounded-full
 shadow-sm
-">
+"
+        >
           {totalCards} Cards
         </div>
 
@@ -147,7 +177,6 @@ shadow-sm
         </div>
 
         <div className="w-full bg-slate-800 h-2 rounded-full">
-
           <div
             className="
 bg-green-500
@@ -157,7 +186,6 @@ transition-all
 "
             style={{ width: `${progress}%` }}
           />
-
         </div>
 
       </div>

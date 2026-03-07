@@ -34,47 +34,66 @@ export default function Flashcards() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
 
-      <div className="flex justify-between items-center mb-6">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-        <h1 className="text-2xl font-semibold">Flashcards Sets</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold">
+          Flashcard Sets
+        </h1>
 
         <input
           type="text"
-          placeholder="Search FlashcardSets..."
+          placeholder="Search Flashcard Sets..."
           value={search}
           onChange={handleSearch}
           className="
-bg-slate-900
-border border-slate-700
-rounded-lg
-px-4 py-2
-text-sm
-outline-none
-focus:border-blue-500
-w-64
-"
+          bg-slate-900
+          border border-slate-700
+          rounded-lg
+          px-4 py-2
+          text-sm
+          outline-none
+          focus:border-blue-500
+          w-full sm:w-72
+          "
         />
 
       </div>
 
-       <div className="mt-2">
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((set, index) => (
-              <FlashcardSetCard
-                key={set.setId}
-                set={set}
-                index={index}
-                docId={set.document._id}
-                refresh={fetchFlashcards}
-                openSet={() =>
-                  navigate(`/flashcards/${set.document._id}/${set.setId}`)
-                }
-              />
-            ))}
-          </div>
+      {/* Empty State */}
+      {filtered.length === 0 && (
+        <div className="text-center text-gray-400 mt-10">
+          No flashcard sets found.
         </div>
+      )}
+
+      {/* Grid */}
+      <div
+        className="
+        grid
+        grid-cols-1
+        sm:grid-cols-2
+        lg:grid-cols-3
+        xl:grid-cols-4
+        gap-4
+        sm:gap-6
+        "
+      >
+        {filtered.map((set, index) => (
+          <FlashcardSetCard
+            key={set.setId}
+            set={set}
+            index={index}
+            docId={set.document._id}
+            refresh={fetchFlashcards}
+            openSet={() =>
+              navigate(`/flashcards/${set.document._id}/${set.setId}`)
+            }
+          />
+        ))}
+      </div>
 
     </div>
   );

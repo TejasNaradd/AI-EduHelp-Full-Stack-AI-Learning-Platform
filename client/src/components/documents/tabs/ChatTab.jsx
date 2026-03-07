@@ -75,19 +75,19 @@ export default function ChatTab() {
   };
 
   return (
-    <div className="flex flex-col h-[70vh]">
+    <div className="flex flex-col h-[65vh] sm:h-[70vh]">
 
       {/* Header */}
 
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
 
-        <h2 className="text-2xl font-semibold text-white">
+        <h2 className="text-xl sm:text-2xl font-semibold text-white">
           Ask AI
         </h2>
 
         <button
           onClick={clearChat}
-          className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 px-3 py-2 rounded-lg text-sm transition"
+          className="flex items-center justify-center sm:justify-start gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 px-3 py-2 rounded-lg text-sm transition w-full sm:w-auto"
         >
           <Trash2 size={16} />
           Clear
@@ -97,7 +97,7 @@ export default function ChatTab() {
 
       {/* Chat messages */}
 
-      <div className="flex-1 overflow-y-auto bg-black/40 border border-slate-800 rounded-2xl p-6 space-y-5">
+      <div className="flex-1 overflow-y-auto bg-black/40 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-5">
 
         {messages.length === 0 && (
           <div className="text-center text-slate-500 mt-16">
@@ -113,18 +113,14 @@ export default function ChatTab() {
             }`}
           >
 
-            {/* AI Avatar */}
-
             {msg.role === "assistant" && (
-              <div className="w-9 h-9 flex items-center justify-center rounded-full bg-slate-800 border border-slate-700">
+              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 border border-slate-700 shrink-0">
                 <Bot size={16} />
               </div>
             )}
 
-            {/* Message Bubble */}
-
             <div
-              className={`max-w-[65%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+              className={`max-w-[85%] sm:max-w-[70%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                 msg.role === "user"
                   ? "bg-blue-600 text-white"
                   : "bg-slate-900 border border-slate-800 text-slate-300"
@@ -167,10 +163,8 @@ export default function ChatTab() {
               )}
             </div>
 
-            {/* User Avatar */}
-
             {msg.role === "user" && (
-              <div className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600">
+              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 shrink-0">
                 <User size={16} />
               </div>
             )}
@@ -185,11 +179,12 @@ export default function ChatTab() {
         )}
 
         <div ref={bottomRef} />
+
       </div>
 
       {/* Input */}
 
-      <div className="flex gap-3 mt-4">
+      <div className="flex gap-2 sm:gap-3 mt-4">
 
         <input
           value={input}

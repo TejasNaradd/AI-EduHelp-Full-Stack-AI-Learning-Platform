@@ -9,7 +9,7 @@ export default function DocumentGrid({ documents, refresh }) {
     );
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 pb-12">
       {documents.map((doc) => (
         <DocumentCard
           key={doc._id}

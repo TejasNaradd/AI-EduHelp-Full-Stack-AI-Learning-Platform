@@ -82,7 +82,7 @@ export default function DocumentCard({ doc, refresh }) {
       >
         {/* PDF Preview */}
 
-        <div className="h-44 bg-slate-800 overflow-hidden relative rounded-t-3xl">
+        <div className="h-40 sm:h-44 bg-slate-800 overflow-hidden relative rounded-t-3xl">
           {doc.file_url ? (
             <iframe
               src={`${doc.file_url}#toolbar=0&navpanes=0&scrollbar=0`}
@@ -100,16 +100,16 @@ export default function DocumentCard({ doc, refresh }) {
 
         {/* Content */}
 
-        <div className="p-6 space-y-5">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
           {/* Title + Menu */}
 
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <h2 className="text-lg font-semibold text-white tracking-wide line-clamp-2">
+          <div className="flex justify-between items-start gap-3">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-base sm:text-lg font-semibold text-white tracking-wide line-clamp-2">
                 {doc.title || "Untitled Document"}
               </h2>
 
-              <div className="flex items-center gap-6 mt-2 text-sm text-slate-400">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-1 mt-2 text-xs sm:text-sm text-slate-400">
                 <div className="flex items-center gap-1.5">
                   <FileText size={14} className="text-slate-500" />
                   <span>{formattedDate}</span>
@@ -139,7 +139,7 @@ export default function DocumentCard({ doc, refresh }) {
 
             {/* Menu */}
 
-            <div className="relative">
+            <div className="relative shrink-0">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -175,7 +175,7 @@ export default function DocumentCard({ doc, refresh }) {
 
           {/* Stats */}
 
-          <div className="flex items-center justify-between pt-3 border-t border-slate-800 text-sm">
+          <div className="flex items-center justify-between pt-3 border-t border-slate-800 text-xs sm:text-sm">
             <div className="flex items-center gap-2 text-purple-400">
               <Brain size={16} />
               <span className="text-slate-300">
@@ -196,13 +196,14 @@ export default function DocumentCard({ doc, refresh }) {
           <div className="flex items-center justify-between pt-2">
             <span
               className="
-    text-xs 
-    px-3 py-1 
-    rounded-full 
-    bg-green-500/10 
-    text-green-400 
-    border border-green-500/20
-  "
+              text-xs 
+              px-3 py-1 
+              rounded-full 
+              bg-green-500/10 
+              text-green-400 
+              border border-green-500/20
+              whitespace-nowrap
+            "
             >
               Uploaded
             </span>
@@ -210,7 +211,9 @@ export default function DocumentCard({ doc, refresh }) {
             {score && (
               <div className="text-xs text-slate-400">
                 Score:{" "}
-                <span className="text-green-400 font-semibold">{score}%</span>
+                <span className="text-green-400 font-semibold">
+                  {score}%
+                </span>
               </div>
             )}
           </div>

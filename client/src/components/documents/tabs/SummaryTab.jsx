@@ -59,7 +59,7 @@ export default function SummaryTab() {
 
   if (!summary) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 space-y-6">
+      <div className="flex flex-col items-center justify-center py-16 sm:py-20 space-y-6 text-center">
 
         <Sparkles size={40} className="text-slate-500" />
 
@@ -83,15 +83,15 @@ export default function SummaryTab() {
     <div className="space-y-6">
 
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
-        <h2 className="text-2xl font-semibold text-white tracking-wide">
+        <h2 className="text-xl sm:text-2xl font-semibold text-white tracking-wide">
           Document Summary
         </h2>
 
         <button
           onClick={copySummary}
-          className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 px-3 py-2 rounded-lg text-sm transition"
+          className="flex items-center justify-center sm:justify-start gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 px-3 py-2 rounded-lg text-sm transition w-full sm:w-auto"
         >
           <Copy size={16} />
           Copy
@@ -100,7 +100,7 @@ export default function SummaryTab() {
       </div>
 
       {/* Summary Card */}
-      <div className="bg-black/40 border border-slate-800 rounded-2xl p-8 backdrop-blur-sm shadow-[0_0_20px_rgba(255,255,255,0.03)]">
+      <div className="bg-black/40 border border-slate-800 rounded-2xl p-4 sm:p-6 lg:p-8 backdrop-blur-sm shadow-[0_0_20px_rgba(255,255,255,0.03)]">
 
         <div
           className="
@@ -111,8 +111,8 @@ export default function SummaryTab() {
           prose-headings:text-white
           prose-headings:font-semibold
 
-          prose-h2:text-xl
-          prose-h3:text-lg
+          prose-h2:text-lg sm:prose-h2:text-xl
+          prose-h3:text-base sm:prose-h3:text-lg
 
           prose-p:text-slate-300
           prose-p:leading-relaxed

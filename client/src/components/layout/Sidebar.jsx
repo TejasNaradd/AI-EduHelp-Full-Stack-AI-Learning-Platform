@@ -57,6 +57,7 @@ export default function Sidebar({ open, setOpen }) {
         <nav className="flex-1 p-4 space-y-2">
           <NavLink
             to="/dashboard"
+            onClick={() => setOpen(false)}
             className={({ isActive }) =>
               `${linkBase} ${isActive ? linkActive : linkIdle}`
             }
@@ -67,6 +68,7 @@ export default function Sidebar({ open, setOpen }) {
 
           <NavLink
             to="/documents"
+            onClick={() => setOpen(false)}
             className={({ isActive }) =>
               `${linkBase} ${isActive ? linkActive : linkIdle}`
             }
@@ -77,6 +79,7 @@ export default function Sidebar({ open, setOpen }) {
 
           <NavLink
             to="/flashcards"
+            onClick={() => setOpen(false)}
             className={({ isActive }) =>
               `${linkBase} ${isActive ? linkActive : linkIdle}`
             }
@@ -87,6 +90,7 @@ export default function Sidebar({ open, setOpen }) {
 
           <NavLink
             to="/profile"
+            onClick={() => setOpen(false)}
             className={({ isActive }) =>
               `${linkBase} ${isActive ? linkActive : linkIdle}`
             }
