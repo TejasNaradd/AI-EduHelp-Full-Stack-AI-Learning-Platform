@@ -127,6 +127,7 @@ export default function Login() {
           size="large"
           shape="pill"
           useOneTap={false}
+          auto_select={false}
         />
 
         <p className="text-slate-400 text-sm mt-6 text-center">
