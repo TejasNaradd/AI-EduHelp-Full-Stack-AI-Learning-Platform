@@ -56,7 +56,10 @@ export default function QuizTab() {
   };
 
   if(activeQuiz){
-    return <QuizPlayer quizId={activeQuiz} goBack={()=>setActiveQuiz(null)} />;
+    return <QuizPlayer quizId={activeQuiz} goBack={()=>{
+      setActiveQuiz(null); 
+      fetchQuizzes()
+    }} />;
   }
 
 return (

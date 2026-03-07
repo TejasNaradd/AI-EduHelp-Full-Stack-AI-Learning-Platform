@@ -42,7 +42,7 @@ export default function QuizCard({ quiz, openQuiz }) {
           </h3>
         </div>
 
-        <div className="text-xs bg-slate-800 px-2 py-1 rounded">
+        <div className="text-xs bg-slate-800 px-3 py-1 rounded-md whitespace-nowrap font-medium text-slate-200">
           {quiz.totalQuestions} Q
         </div>
       </div>

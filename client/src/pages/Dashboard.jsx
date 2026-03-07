@@ -28,7 +28,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-full">
+      <div className="flex justify-center items-center h-[60vh]">
         <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -37,9 +37,10 @@ export default function Dashboard() {
   if (!stats) return null;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-2 sm:px-4 md:px-6">
+      
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 md:gap-6">
         <StatCard title="Documents" value={stats.documents} icon={FileText} />
 
         <StatCard title="Quizzes" value={stats.quizzes} icon={Brain} />
@@ -58,29 +59,38 @@ export default function Dashboard() {
       </div>
 
       {/* Charts */}
-      <AnalyticsCharts
-        weeklyUploads={stats.weeklyUploads}
-        scoreTrend={stats.scoreTrend}
-      />
+      <div className="w-full overflow-x-hidden">
+        <AnalyticsCharts
+          weeklyUploads={stats.weeklyUploads}
+          scoreTrend={stats.scoreTrend}
+        />
+      </div>
 
       {/* Progress */}
-      <ProgressChart
-        completed={stats.completedFlashcards}
-        total={stats.totalFlashcards}
-      />
+      <div className="w-full">
+        <ProgressChart
+          completed={stats.completedFlashcards}
+          total={stats.totalFlashcards}
+        />
+      </div>
 
       {/* Recent Activity */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col h-[350px]">
-        <h3 className="text-lg font-semibold mb-4 shrink-0">Recent Activity</h3>
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 flex flex-col h-[300px] sm:h-[350px]">
+        <h3 className="text-lg font-semibold mb-4 shrink-0">
+          Recent Activity
+        </h3>
 
-        <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+        <div className="flex-1 overflow-y-auto space-y-4 pr-1 sm:pr-2">
           {stats.recentActivity?.length > 0 ? (
             stats.recentActivity.map((item, index) => (
               <div
                 key={index}
-                className="flex justify-between items-start border-b border-slate-800 pb-3"
+                className="flex justify-between items-start border-b border-slate-800 pb-3 gap-3"
               >
-                <p className="text-slate-300 text-sm">{item.message}</p>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  {item.message}
+                </p>
+
                 <span className="text-xs text-slate-500 whitespace-nowrap">
                   {new Date(item.createdAt).toLocaleDateString("en-GB", {
                     day: "numeric",
@@ -91,7 +101,9 @@ export default function Dashboard() {
               </div>
             ))
           ) : (
-            <p className="text-slate-500 text-sm">No recent activity yet.</p>
+            <p className="text-slate-500 text-sm">
+              No recent activity yet.
+            </p>
           )}
         </div>
       </div>
