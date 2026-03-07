@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import api from "../api/axios";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { fetchUser } = useAuth(); // ✅ important
+  const { fetchUser } = useAuth();
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -29,43 +29,36 @@ export default function Login() {
       }
 
       await api.post("/user/login", payload);
-
-      // ✅ refresh auth user immediately
       await fetchUser();
-
       navigate("/dashboard");
 
     } catch (error) {
-      setErrorMsg(
-        error.response?.data?.message || "Something went wrong"
-      );
+      setErrorMsg(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleLogin = async (credentialResponse) => {
-    setErrorMsg("");
-    setLoading(true);
-
-    try {
-      await api.post("/user/google", {
-        idToken: credentialResponse.credential,
-      });
-
-      // ✅ refresh auth user
-      await fetchUser();
-
-      navigate("/dashboard");
-
-    } catch (error) {
-      setErrorMsg(
-        error.response?.data?.message || "Google login failed"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  // ✅ changed to useGoogleLogin hook
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setErrorMsg("");
+      setLoading(true);
+      try {
+        await api.post("/user/google", {
+          idToken: tokenResponse.credential,
+        });
+        await fetchUser();
+        navigate("/dashboard");
+      } catch (error) {
+        setErrorMsg(error.response?.data?.message || "Google login failed");
+      } finally {
+        setLoading(false);
+      }
+    },
+    onError: () => setErrorMsg("Google Login Failed"),
+    flow: "implicit",
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white px-6">
@@ -120,18 +113,21 @@ export default function Login() {
           <div className="flex-1 h-px bg-slate-700" />
         </div>
 
-        <GoogleLogin
-          onSuccess={handleGoogleLogin}
-          onError={() => setErrorMsg("Google Login Failed")}
-          theme="filled_black"
-          size="large"
-          shape="pill"
-          useOneTap={false}
-          auto_select={false}
-        />
+        {/* ✅ custom Google button */}
+        <button
+          onClick={() => googleLogin()}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg hover:border-blue-500 transition text-white font-medium disabled:opacity-60"
+        >
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            className="w-5 h-5"
+          />
+          Sign in with Google
+        </button>
 
         <p className="text-slate-400 text-sm mt-6 text-center">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Link to="/register" className="text-blue-500">
             Register
           </Link>

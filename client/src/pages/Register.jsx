@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import api from "../api/axios";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -60,16 +60,23 @@ export default function Register() {
     }
   };
 
-  const handleGoogleSignup = async (credentialResponse) => {
-    try {
-      await api.post("/user/google", {
-        idToken: credentialResponse.credential,
-      });
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Google signup failed:", error);
-    }
-  };
+  // ✅ changed to useGoogleLogin hook
+  const googleSignup = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setError("");
+      try {
+        await api.post("/user/google", {
+          idToken: tokenResponse.credential,
+        });
+        await fetchUser();
+        navigate("/dashboard");
+      } catch (error) {
+        setError(error.response?.data?.message || "Google signup failed");
+      }
+    },
+    onError: () => setError("Google Signup Failed"),
+    flow: "implicit",
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white px-6">
@@ -125,14 +132,12 @@ export default function Register() {
             className="w-full mb-4 p-3 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:border-blue-500"
           />
 
-          {/* Profile Upload */}
           <div className="mb-6">
             <label className="block text-sm text-slate-400 mb-3">
               Profile Photo
             </label>
 
             <div className="flex items-center gap-4">
-              {/* Avatar Preview */}
               <div className="w-16 h-16 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden">
                 {profileImage ? (
                   <img
@@ -141,13 +146,10 @@ export default function Register() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-slate-500 text-xs">
-                    No Photo
-                  </span>
+                  <span className="text-slate-500 text-xs">No Photo</span>
                 )}
               </div>
 
-              {/* Upload Button */}
               <label className="cursor-pointer">
                 <input
                   type="file"
@@ -176,22 +178,23 @@ export default function Register() {
           </button>
         </form>
 
-        {/* Divider */}
         <div className="flex items-center my-6">
           <div className="flex-1 h-px bg-slate-700" />
           <span className="px-3 text-slate-400 text-sm">OR</span>
           <div className="flex-1 h-px bg-slate-700" />
         </div>
 
-        <GoogleLogin
-          onSuccess={handleGoogleSignup}
-          onError={() => console.log("Google Signup Failed")}
-          theme="filled_black"
-          size="large"
-          shape="pill"
-          useOneTap={false}
-          auto_select={false}
-        />
+        {/* ✅ custom Google button */}
+        <button
+          onClick={() => googleSignup()}
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg hover:border-blue-500 transition text-white font-medium"
+        >
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            className="w-5 h-5"
+          />
+          Sign up with Google
+        </button>
 
         <p className="text-slate-400 text-sm mt-6 text-center">
           Already have an account?{" "}
