@@ -7,8 +7,7 @@ export default function Sidebar({ open, setOpen }) {
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
-  const linkBase =
-    "flex items-center gap-3 px-4 py-2 rounded-lg transition-colors";
+  const linkBase = "flex items-center gap-3 px-4 py-2 rounded-lg transition-colors";
   const linkIdle = "text-slate-400 hover:bg-slate-800 hover:text-white";
   const linkActive = "bg-slate-800 text-white";
 
@@ -16,7 +15,6 @@ export default function Sidebar({ open, setOpen }) {
     try {
       await api.post("/user/logout");
     } catch {}
-
     setUser(null);
     navigate("/", { replace: true });
   };
@@ -37,14 +35,14 @@ export default function Sidebar({ open, setOpen }) {
         lg:translate-x-0`}
       >
         {/* MOBILE CLOSE BUTTON */}
-        <div className="lg:hidden flex justify-end p-3">
+        <div className="lg:hidden flex justify-end p-3 shrink-0">
           <button onClick={() => setOpen(false)}>
             <X size={20} />
           </button>
         </div>
 
         {/* LOGO */}
-        <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-800">
+        <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-800 shrink-0">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold">
             AI
           </div>
@@ -53,8 +51,8 @@ export default function Sidebar({ open, setOpen }) {
           </span>
         </div>
 
-        {/* NAV */}
-        <nav className="flex-1 p-4 space-y-2">
+        {/* NAV — ✅ scrollable if needed, takes remaining space */}
+        <nav className="flex-1 overflow-y-auto p-4 space-y-2">
           <NavLink
             to="/dashboard"
             onClick={() => setOpen(false)}
@@ -100,8 +98,8 @@ export default function Sidebar({ open, setOpen }) {
           </NavLink>
         </nav>
 
-        {/* LOGOUT */}
-        <div className="p-4 border-t border-slate-800">
+        {/* LOGOUT — ✅ always pinned to bottom */}
+        <div className="p-4 border-t border-slate-800 shrink-0">
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"

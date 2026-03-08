@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 export default function ProfileForm() {
   const [avatar, setAvatar] = useState(null);
+  const [isGoogleUser, setIsGoogleUser] = useState(false); // ✅ added
 
   const [form, setForm] = useState({
     fullname: "",
@@ -23,6 +24,7 @@ export default function ProfileForm() {
       username: data.username || "",
       email: data.email || "",
     });
+    setIsGoogleUser(data.authProvider === "google"); // ✅ added
   };
 
   const handleChange = (e) => {
@@ -37,7 +39,7 @@ export default function ProfileForm() {
     try {
       const data = new FormData();
       data.append("fullname", form.fullname);
-      data.append("email", form.email);
+      if (!isGoogleUser) data.append("email", form.email); // ✅ only send email for local users
       if (avatar) data.append("profileImage", avatar);
 
       await api.patch("/user/update-profile", data, {
@@ -75,15 +77,26 @@ export default function ProfileForm() {
           />
         </div>
 
-        <div className="md:col-span-2">
-          <label className="text-xs sm:text-sm text-gray-400">Email</label>
-          <input
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full mt-1 p-2 sm:p-2.5 text-sm rounded bg-[#020617] border border-gray-700"
-          />
-        </div>
+        {/* ✅ show email field only for local users */}
+        {!isGoogleUser ? (
+          <div className="md:col-span-2">
+            <label className="text-xs sm:text-sm text-gray-400">Email</label>
+            <input
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 sm:p-2.5 text-sm rounded bg-[#020617] border border-gray-700"
+            />
+          </div>
+        ) : (
+          <div className="md:col-span-2">
+            <label className="text-xs sm:text-sm text-gray-400">Email</label>
+            <div className="w-full mt-1 p-2 sm:p-2.5 text-sm rounded bg-[#020617] border border-gray-700 opacity-50 flex items-center justify-between">
+              <span>{form.email}</span>
+              <span className="text-xs text-slate-500 ml-2">Google account</span>
+            </div>
+          </div>
+        )}
 
         <div className="md:col-span-2">
           <label className="text-xs sm:text-sm text-gray-400">Profile Image</label>
