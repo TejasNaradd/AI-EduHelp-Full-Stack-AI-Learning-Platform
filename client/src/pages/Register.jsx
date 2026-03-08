@@ -65,6 +65,7 @@ export default function Register() {
       await api.post("/user/google", {
         idToken: credentialResponse.credential,
       });
+      await fetchUser();
       navigate("/dashboard");
     } catch (error) {
       console.error("Google signup failed:", error);
@@ -191,6 +192,7 @@ export default function Register() {
           size="large"
           shape="pill"
           width="350"
+          text="signup_with"
         />
       </div>
         <p className="text-slate-400 text-sm mt-6 text-center">
