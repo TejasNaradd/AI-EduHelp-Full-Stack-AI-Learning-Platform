@@ -34,11 +34,8 @@ export default function Login() {
       await fetchUser();
 
       navigate("/dashboard");
-
     } catch (error) {
-      setErrorMsg(
-        error.response?.data?.message || "Something went wrong"
-      );
+      setErrorMsg(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -57,11 +54,8 @@ export default function Login() {
       await fetchUser();
 
       navigate("/dashboard");
-
     } catch (error) {
-      setErrorMsg(
-        error.response?.data?.message || "Google login failed"
-      );
+      setErrorMsg(error.response?.data?.message || "Google login failed");
     } finally {
       setLoading(false);
     }
@@ -74,9 +68,7 @@ export default function Login() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-slate-900 p-10 rounded-2xl border border-slate-800 w-full max-w-md"
       >
-        <h2 className="text-3xl font-bold mb-6 text-center">
-          Welcome Back
-        </h2>
+        <h2 className="text-3xl font-bold mb-6 text-center">Welcome Back</h2>
 
         {errorMsg && (
           <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500 text-red-400 text-sm">
@@ -120,14 +112,16 @@ export default function Login() {
           <div className="flex-1 h-px bg-slate-700" />
         </div>
 
-        <GoogleLogin
-          onSuccess={handleGoogleLogin}
-          onError={() => setErrorMsg("Google Login Failed")}
-          theme="filled_black"
-          size="large"
-          shape="pill"
-        />
-
+        <div className="flex justify-center w-full">
+          <GoogleLogin
+            onSuccess={handleGoogleLogin}
+            onError={() => setErrorMsg("Google Login Failed")}
+            theme="filled_black"
+            size="large"
+            shape="pill"
+            width="350"
+          />
+        </div>
         <p className="text-slate-400 text-sm mt-6 text-center">
           Don’t have an account?{" "}
           <Link to="/register" className="text-blue-500">

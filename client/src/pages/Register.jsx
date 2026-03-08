@@ -183,14 +183,16 @@ export default function Register() {
           <div className="flex-1 h-px bg-slate-700" />
         </div>
 
+      <div className="flex justify-center w-full">
         <GoogleLogin
           onSuccess={handleGoogleSignup}
           onError={() => console.log("Google Signup Failed")}
           theme="filled_black"
           size="large"
           shape="pill"
+          width="350"
         />
-
+      </div>
         <p className="text-slate-400 text-sm mt-6 text-center">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-500">
