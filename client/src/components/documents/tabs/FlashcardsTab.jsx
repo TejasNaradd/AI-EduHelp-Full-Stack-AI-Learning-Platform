@@ -38,9 +38,19 @@ export default function FlashcardsTab() {
       fetchSets();
     } catch (err) {
       toast.dismiss();
-      toast.error("Generation failed");
+      const msg = err.response?.data?.message || "Generation failed";
+      if (
+        msg.toLowerCase().includes("topic") ||
+        msg.toLowerCase().includes("summary")
+      ) {
+        toast.error(
+          "Please generate a summary first before creating flashcards!"
+        );
+      } else {
+        toast.error(msg);
+      }
     }
-  };
+  }
 
   if (activeSet) {
     return (
@@ -57,10 +67,8 @@ export default function FlashcardsTab() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
         <h2 className="text-xl sm:text-2xl font-semibold flex items-center gap-2">
           <Layers size={20} className="shrink-0" />
           Flashcards
@@ -78,7 +86,6 @@ export default function FlashcardsTab() {
           <Plus size={16} />
           Generate Flashcards
         </button>
-
       </div>
 
       {/* Loading */}
@@ -123,7 +130,6 @@ export default function FlashcardsTab() {
           ))}
         </div>
       )}
-
     </div>
   );
 }

@@ -34,25 +34,22 @@ export default function QuizTab() {
   },[]);
 
   const generateQuiz = async () => {
-
     try {
-
       toast.loading("Generating quiz...");
-
       await api.post(`/documents/${docId}/quiz`);
-
       toast.dismiss();
       toast.success("Quiz generated");
-
       fetchQuizzes();
-
     } catch (err) {
-
       toast.dismiss();
-      toast.error("Quiz generation failed");
-
+      const msg = err.response?.data?.message || "Quiz generation failed";
+      if (msg.toLowerCase().includes("topic") || msg.toLowerCase().includes("summary")) {
+        toast.error("Please generate a summary first before creating a quiz!");
+      } else {
+        toast.error(msg);
+      }
     }
-  };
+  }
 
   if(activeQuiz){
     return (
