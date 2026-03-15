@@ -2,13 +2,13 @@ import OpenAI from "openai";
 import ApiError from "../utils/ApiError.js";
 
 const openai = new OpenAI({
-  apiKey: process.env.NVIDIA_API_KEY,
-  baseURL: process.env.NVIDIA_API_URL,
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1",
 });
 
 export const extractTopicsAI = async (text) => {
   const response = await openai.chat.completions.create({
-    model: "meta/llama3-8b-instruct",
+    model: "llama-3.1-8b-instant",
     messages: [
       {
         role: "system",
@@ -16,17 +16,19 @@ export const extractTopicsAI = async (text) => {
       },
       {
         role: "user",
-        content: `Extract 5 key learning topics from this document. Return ONLY a JSON array like ["topic1","topic2"].\n\n${text}`,
+        content: `Extract 5 key learning topics from this document. 
+Return ONLY a JSON array like ["topic1","topic2"].\n\n${text}`,
       },
     ],
     temperature: 0.3,
-    top_p: 1,
-    max_tokens: 1024,
   });
+
   const content = response.choices[0].message.content;
+
   const start = content.indexOf("[");
   const end = content.lastIndexOf("]") + 1;
   const jsonString = content.slice(start, end);
+
   return JSON.parse(jsonString);
 };
 
@@ -35,12 +37,15 @@ export const generateQuizAI = async (text, topics) => {
   const topicNames = topics.map((t) => t.name);
 
   const response = await openai.chat.completions.create({
-    model: "meta/llama3-8b-instruct",
+    model: "llama-3.1-8b-instant",
     messages: [
       {
         role: "system",
-        content: `You are an AI exam generator.
+        content: `
+You are an AI exam generator.
+
 Generate EXACTLY 10 multiple choice questions.
+
 Rules:
 - Use ONLY the provided topics.
 - Generate 2 questions per topic.
@@ -49,13 +54,17 @@ Rules:
 - Only one correct answer.
 - Return correct answer as index (0–3).
 - Do NOT include explanations.
-- Return STRICT JSON only.`,
+- Return STRICT JSON only.
+`,
       },
       {
         role: "user",
-        content: `DOCUMENT: ${limitedText}
+        content: `
+DOCUMENT:
+${limitedText}
 
-TOPICS: ${topicNames.join(", ")}
+TOPICS:
+${topicNames.join(", ")}
 
 Return output in this JSON format:
 
@@ -68,12 +77,11 @@ Return output in this JSON format:
       "topic": "topic name"
     }
   ]
-}`,
+}
+`,
       },
     ],
     temperature: 0.6,
-    top_p: 1,
-    max_tokens: 1024,
   });
 
   const content = response.choices[0].message.content;
@@ -114,12 +122,15 @@ export const generateFlashcardsAI = async (text, topics) => {
   const topicNames = topics.map((t) => t.name);
 
   const response = await openai.chat.completions.create({
-    model: "meta/llama3-8b-instruct",
+    model: "llama-3.1-8b-instant",
     messages: [
       {
         role: "system",
-        content: `You are an AI study assistant.
+        content: `
+You are an AI study assistant.
+
 Generate flashcards from the document.
+
 Rules:
 - Cover ALL provided topics (at least 1 flashcard each)
 - For more important topics, generate 2–3 flashcards
@@ -127,13 +138,17 @@ Rules:
 - Each flashcard must belong to one topic
 - Keep questions clear and factual
 - Do NOT include explanations outside JSON
-- Return STRICT JSON only`,
+- Return STRICT JSON only
+`,
       },
       {
         role: "user",
-        content: `DOCUMENT: ${limitedText}
+        content: `
+DOCUMENT:
+${limitedText}
 
-TOPICS: ${topicNames.join(", ")}
+TOPICS:
+${topicNames.join(", ")}
 
 Return output in this JSON format:
 
@@ -145,12 +160,11 @@ Return output in this JSON format:
       "topic": "topic name"
     }
   ]
-}`,
+}
+`,
       },
     ],
     temperature: 0.5,
-    top_p: 1,
-    max_tokens: 1024,
   });
 
   const content = response.choices[0].message.content;
@@ -178,33 +192,40 @@ export const generateAiResponse = async (text, messages) => {
       .join("\n");
 
     const response = await openai.chat.completions.create({
-      model: "meta/llama3-8b-instruct",
+      model: "llama-3.1-8b-instant",
       messages: [
         {
           role: "system",
-          content: `You are EduHelp AI — an intelligent study assistant.
+          content: `
+You are EduHelp AI — an intelligent study assistant.
+
 Your job is to help students understand study material.
+
 Rules:
 - Use the provided study material as the knowledge source.
 - Explain concepts clearly in simple language.
 - Use bullet points when helpful.
 - Give examples if useful.
-- If the answer is not in the material, say: "This topic is not covered in the provided document."
-- Keep answers structured and concise.`,
+- If the answer is not in the material, say:
+  "This topic is not covered in the provided document."
+- Keep answers structured and concise.
+`,
         },
         {
           role: "user",
-          content: `STUDY MATERIAL: ${text}
+          content: `
+STUDY MATERIAL:
+${text}
 
 CONVERSATION SO FAR:
 ${conversation}
 
-Answer the latest user question based on the material above.`,
+Answer the latest user question based on the material above.
+`,
         },
       ],
       temperature: 0.7,
-      top_p: 1,
-      max_tokens: 1024,
+      max_tokens: 1500,
     });
 
     const reply = response?.choices?.[0]?.message?.content?.trim();
@@ -222,7 +243,7 @@ Answer the latest user question based on the material above.`,
 
 export const generateSummary = async (text) => {
   const response = await openai.chat.completions.create({
-    model: "meta/llama3-8b-instruct",
+    model: "llama-3.3-70b-versatile",
     messages: [
       {
         role: "system",
@@ -305,10 +326,8 @@ STRICT RULES:
       },
     ],
     temperature: 0.4,
-    top_p: 1,
     max_tokens: 2048,
   });
 
   return response.choices[0].message.content;
 };
-

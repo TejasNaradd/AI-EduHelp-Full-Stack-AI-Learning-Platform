@@ -86,14 +86,6 @@ export default function SummaryTab() {
         </h2>
         <div className="flex items-center gap-2">
           <button
-            onClick={generateSummary}
-            disabled={generating}
-            className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 border border-slate-700 px-3 py-2 rounded-lg text-slate-300 text-sm transition"
-          >
-            <RefreshCw size={14} className={generating ? "animate-spin" : ""} />
-            {generating ? "Regenerating..." : "Regenerate"}
-          </button>
-          <button
             onClick={copySummary}
             className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-2 rounded-lg text-slate-300 text-sm transition"
           >

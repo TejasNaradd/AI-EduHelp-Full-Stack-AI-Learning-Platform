@@ -17,8 +17,7 @@ router.route("/:docId")
     .delete(verifyjwt,deleteDoc)
     .patch(verifyjwt,updateDoc)
 
-router.route("/:docId/summary")
-    .post(verifyjwt,generateSummary)
+router.route("/:docId/summary").post(verifyjwt,generateSummary)
 
 router.route("/:docId/progress").get(verifyjwt,getProgress)
 
