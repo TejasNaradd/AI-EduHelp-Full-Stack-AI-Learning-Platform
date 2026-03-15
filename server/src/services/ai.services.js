@@ -2,58 +2,60 @@ import OpenAI from "openai";
 import ApiError from "../utils/ApiError.js";
 
 const openai = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
+  // apiKey: process.env.GROQ_API_KEY,
+  // baseURL: "https://api.groq.com/openai/v1",
+  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: 'https://integrate.api.nvidia.com/v1',
 });
 
-export const generateSummary = async (text) => {
-  const response = await openai.chat.completions.create({
-    model: "llama-3.1-8b-instant",
-    messages: [
-      {
-        role: "system",
-        content: `
-You are an expert educational assistant that summarizes study documents.
+// export const generateSummary = async (text) => {
+//   const response = await openai.chat.completions.create({
+//     model: "chatgpt-4o-latest",
+//     messages: [
+//       {
+//         role: "system",
+//         content: `
+// You are an expert educational assistant that summarizes study documents.
 
-Return the summary in clean Markdown format with proper headings and bullet points.
+// Return the summary in clean Markdown format with proper headings and bullet points.
 
-Rules:
-- Use clear section headings.
-- Use bullet points for lists.
-- Keep explanations concise.
-- Focus on important concepts only.
-- Avoid long paragraphs.
-- Use simple student-friendly language.
+// Rules:
+// - Use clear section headings.
+// - Use bullet points for lists.
+// - Keep explanations concise.
+// - Focus on important concepts only.
+// - Avoid long paragraphs.
+// - Use simple student-friendly language.
 
-Format example:
+// Format example:
 
-## Overview
-Short introduction of the topic.
+// ## Overview
+// Short introduction of the topic.
 
-## Key Concepts
-- Concept 1 explanation
-- Concept 2 explanation
-- Concept 3 explanation
+// ## Key Concepts
+// - Concept 1 explanation
+// - Concept 2 explanation
+// - Concept 3 explanation
 
-## Important Points
-- Key idea 1
-- Key idea 2
-- Key idea 3
+// ## Important Points
+// - Key idea 1
+// - Key idea 2
+// - Key idea 3
 
-## Conclusion
-Short concluding summary.
-`,
-      },
-      {
-        role: "user",
-        content: `Summarize the following document:\n\n${text}`,
-      },
-    ],
-    temperature: 0.5,
-  });
+// ## Conclusion
+// Short concluding summary.
+// `,
+//       },
+//       {
+//         role: "user",
+//         content: `Summarize the following document:\n\n${text}`,
+//       },
+//     ],
+//     temperature: 0.5,
+//   });
 
-  return response.choices[0].message.content;
-};
+//   return response.choices[0].message.content;
+// };
 
 export const extractTopicsAI = async (text) => {
   const response = await openai.chat.completions.create({
@@ -241,26 +243,78 @@ Return output in this JSON format:
   return parsed.flashcards.slice(0, 8);
 };
 
+// export const generateAiResponse = async (text, messages) => {
+//   try {
+//     const conversation = messages
+//       .map((msg) => `${msg.role.toUpperCase()}: ${msg.content}`)
+//       .join("\n");
+//     const response = await openai.chat.completions.create({
+//       model: "llama-3.1-8b-instant",
+//       messages: [
+//         {
+//           role: "system",
+//           content: `
+// You are EduHelp AI — an intelligent study assistant.
+
+// Rules:
+// - Use the provided study material as knowledge base.
+// - Do NOT copy text directly from the document.
+// - Explain clearly in simple language.
+// - Provide examples when helpful.
+// - If question is outside document, politely say it is not covered.
+// - Be structured and concise.
+// `,
+//         },
+//         {
+//           role: "user",
+//           content: `
+// STUDY MATERIAL:
+// ${text}
+
+// CONVERSATION SO FAR:
+// ${conversation}
+
+// Respond to the latest USER message appropriately.
+// `,
+//         },
+//       ],
+//       temperature: 0.7,
+//     });
+//     const reply = response.choices?.[0]?.message?.content?.trim();
+//     if (!reply) {
+//       throw new ApiError(500, "No response generated from AI");
+//     }
+//     return reply;
+//   } catch (error) {
+//     console.error("Chat AI Error:", error.message);
+//     throw new ApiError(500,"Failed to generate chat response");
+//   }
+// };
+
 export const generateAiResponse = async (text, messages) => {
   try {
     const conversation = messages
       .map((msg) => `${msg.role.toUpperCase()}: ${msg.content}`)
       .join("\n");
+
     const response = await openai.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+      model:  "chatgpt-4o-latest",
       messages: [
         {
           role: "system",
           content: `
 You are EduHelp AI — an intelligent study assistant.
 
+Your job is to help students understand study material.
+
 Rules:
-- Use the provided study material as knowledge base.
-- Do NOT copy text directly from the document.
-- Explain clearly in simple language.
-- Provide examples when helpful.
-- If question is outside document, politely say it is not covered.
-- Be structured and concise.
+- Use the provided study material as the knowledge source.
+- Explain concepts clearly in simple language.
+- Use bullet points when helpful.
+- Give examples if useful.
+- If the answer is not in the material, say:
+  "This topic is not covered in the provided document."
+- Keep answers structured and concise.
 `,
         },
         {
@@ -272,19 +326,114 @@ ${text}
 CONVERSATION SO FAR:
 ${conversation}
 
-Respond to the latest USER message appropriately.
+Answer the latest user question based on the material above.
 `,
         },
       ],
       temperature: 0.7,
+      max_tokens: 1500,
     });
-    const reply = response.choices?.[0]?.message?.content?.trim();
+
+    const reply = response?.choices?.[0]?.message?.content?.trim();
+
     if (!reply) {
-      throw new ApiError(500, "No response generated from AI");
+      throw new ApiError(500, "No AI response generated");
     }
+
     return reply;
   } catch (error) {
     console.error("Chat AI Error:", error.message);
-    throw new ApiError(500,"Failed to generate chat response");
+    throw new ApiError(500, "Failed to generate chat response");
   }
+};
+
+export const generateSummary = async (text) => {
+  const response = await openai.chat.completions.create({
+    model: "meta/llama-3.1-405b-instruct",
+    messages: [
+      {
+        role: "system",
+        content: `You are an expert educational assistant that creates comprehensive, well-structured study summaries.
+
+Your summaries must follow this EXACT format using clean Markdown:
+
+---
+
+# 📘 [Infer a concise title from the document]
+> *One-line description of what this document covers.*
+
+---
+
+## 🧭 Overview
+Write 2–3 sentences introducing the topic in simple, student-friendly language.
+
+---
+
+## 🔑 Key Concepts
+| Concept | Explanation |
+|---------|-------------|
+| Term 1  | Clear, concise definition |
+| Term 2  | Clear, concise definition |
+| Term 3  | Clear, concise definition |
+
+---
+
+## 📌 Important Points
+- **Point 1**: Short explanation (1–2 lines max)
+- **Point 2**: Short explanation
+- **Point 3**: Short explanation
+- **Point 4**: Short explanation
+
+---
+
+## 🔍 Deep Dive
+> *(Include ONLY if the document contains formulas, algorithms, processes, or step-by-step logic. Otherwise skip this section entirely.)*
+
+\`\`\`
+Relevant formula, pseudocode, or process
+\`\`\`
+
+- Step 1: Explanation
+- Step 2: Explanation
+
+---
+
+## ⚠️ Common Mistakes / Watch Out For
+- Mistake or misconception 1
+- Mistake or misconception 2
+- Mistake or misconception 3
+
+---
+
+## 🧠 Quick Revision Checklist
+- [ ] Can you define [key concept 1]?
+- [ ] Can you explain [key concept 2]?
+- [ ] Can you apply [key concept 3]?
+
+---
+
+## ✅ Conclusion
+Write 2–3 sentences summarizing the single most important takeaway from the document.
+
+---
+
+STRICT RULES:
+1. Only include sections relevant to the document — skip any section that doesn't apply.
+2. Never write long paragraphs — use bullet points and tables wherever possible.
+3. Keep all explanations concise (1–2 lines per point).
+4. Use simple, student-friendly language — no unnecessary jargon.
+5. Infer a meaningful document title from the content if none is provided.
+6. The revision checklist must reference actual concepts from the document.
+7. "Common Mistakes" must be realistic errors a student could make with this material.`,
+      },
+      {
+        role: "user",
+        content: `Summarize the following document:\n\n${text}`,
+      },
+    ],
+    temperature: 0.4,
+    max_tokens: 2048,
+  });
+
+  return response.choices[0].message.content;
 };
