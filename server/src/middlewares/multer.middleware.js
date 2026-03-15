@@ -1,14 +1,22 @@
-import multer from 'multer';
-import path from 'path';
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+// ensure temp folder exists
+const uploadPath = "./public/temp";
+
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
 
 // Storage Configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './public/temp');
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
     const uniqueName =
-    Date.now() + '-' + Math.round(Math.random() * 1e9);
+      Date.now() + "-" + Math.round(Math.random() * 1e9);
 
     cb(null, uniqueName + path.extname(file.originalname));
   },
@@ -17,12 +25,12 @@ const storage = multer.diskStorage({
 // File Filter (Allow only PDF & Images)
 const fileFilter = (req, file, cb) => {
   if (
-    file.mimetype === 'application/pdf' ||
-    file.mimetype.startsWith('image/')
+    file.mimetype === "application/pdf" ||
+    file.mimetype.startsWith("image/")
   ) {
     cb(null, true);
   } else {
-    cb(new Error('Only PDF and image files are allowed'), false);
+    cb(new Error("Only PDF and image files are allowed"), false);
   }
 };
 

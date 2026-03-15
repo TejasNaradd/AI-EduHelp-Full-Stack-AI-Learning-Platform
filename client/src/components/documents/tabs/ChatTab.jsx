@@ -42,7 +42,7 @@ export default function ChatTab() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
-
+          setInput("");
     try {
       setLoading(true);
 
@@ -56,7 +56,6 @@ export default function ChatTab() {
       };
 
       setMessages((prev) => [...prev, aiMessage]);
-      setInput("");
     } catch {
       toast.error("AI response failed");
     } finally {
