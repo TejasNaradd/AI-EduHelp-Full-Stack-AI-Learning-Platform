@@ -3,22 +3,26 @@ import api from "../../api/axios";
 import toast from "react-hot-toast";
 
 export default function ChangePasswordCard() {
-  const [form, setForm] = useState({
-    oldpassword: "",
-    newpassword: "",
-  });
+  const [form, setForm] = useState({ oldpassword: "", newpassword: "" });
+  const [loading, setLoading] = useState(false); // ✅ added
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // ✅ both fields must be filled
+  const canSubmit = form.oldpassword.trim() !== "" && form.newpassword.trim() !== "";
+
   const updatePassword = async () => {
+    setLoading(true); // ✅ disable button immediately on click
     try {
       await api.patch("/user/update-password", form);
       toast.success("Password updated");
       setForm({ oldpassword: "", newpassword: "" });
     } catch (err) {
       toast.error(err.response?.data?.message || "Error");
+    } finally {
+      setLoading(false); // ✅ re-enable only after toast
     }
   };
 
@@ -52,9 +56,10 @@ export default function ChangePasswordCard() {
 
       <button
         onClick={updatePassword}
-        className="w-full sm:w-auto px-5 py-2 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors"
+        disabled={!canSubmit || loading} // ✅
+        className="w-full sm:w-auto px-5 py-2 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        Update Password
+        {loading ? "Updating..." : "Update Password"} {/* ✅ */}
       </button>
     </div>
   );

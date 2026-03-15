@@ -2,15 +2,13 @@ import { useState, useEffect } from "react";
 import api from "../../api/axios";
 import toast from "react-hot-toast";
 
-export default function ProfileForm() {
+export default function ProfileForm({ onUpdate }) {
   const [avatar, setAvatar] = useState(null);
-  const [isGoogleUser, setIsGoogleUser] = useState(false); // ✅ added
+  const [isGoogleUser, setIsGoogleUser] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [form, setForm] = useState({
-    fullname: "",
-    username: "",
-    email: "",
-  });
+  const [form, setForm] = useState({ fullname: "", username: "", email: "" });
+  const [initialForm, setInitialForm] = useState({ fullname: "", username: "", email: "" }); // ✅ useState instead of useRef
 
   useEffect(() => {
     fetchUser();
@@ -19,12 +17,14 @@ export default function ProfileForm() {
   const fetchUser = async () => {
     const res = await api.get("/user/me");
     const data = res.data.data;
-    setForm({
+    const values = {
       fullname: data.fullname || "",
       username: data.username || "",
       email: data.email || "",
-    });
-    setIsGoogleUser(data.authProvider === "google"); // ✅ added
+    };
+    setForm(values);
+    setInitialForm(values); // ✅
+    setIsGoogleUser(data.authProvider === "google");
   };
 
   const handleChange = (e) => {
@@ -35,11 +35,18 @@ export default function ProfileForm() {
     setAvatar(e.target.files[0]);
   };
 
+  // ✅ Now React re-renders when initialForm changes, so isDirty is always accurate
+  const isDirty =
+    avatar !== null ||
+    form.fullname !== initialForm.fullname ||
+    form.email !== initialForm.email;
+
   const updateProfile = async () => {
+    setLoading(true);
     try {
       const data = new FormData();
       data.append("fullname", form.fullname);
-      if (!isGoogleUser) data.append("email", form.email); // ✅ only send email for local users
+      if (!isGoogleUser) data.append("email", form.email);
       if (avatar) data.append("profileImage", avatar);
 
       await api.patch("/user/update-profile", data, {
@@ -47,9 +54,15 @@ export default function ProfileForm() {
       });
 
       toast.success("Profile updated");
+
+      setInitialForm({ ...form }); // ✅ triggers re-render → isDirty becomes false → button disables
+      setAvatar(null);
+      onUpdate();
     } catch (err) {
       console.log(err);
       toast.error(err.response?.data?.message || "Update failed");
+    } finally {
+      setLoading(false); // ✅ loading false only after toast, button re-enables only if dirty
     }
   };
 
@@ -77,7 +90,6 @@ export default function ProfileForm() {
           />
         </div>
 
-        {/* ✅ show email field only for local users */}
         {!isGoogleUser ? (
           <div className="md:col-span-2">
             <label className="text-xs sm:text-sm text-gray-400">Email</label>
@@ -110,9 +122,10 @@ export default function ProfileForm() {
 
       <button
         onClick={updateProfile}
-        className="w-full sm:w-auto px-5 py-2 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors"
+        disabled={!isDirty || loading}
+        className="w-full sm:w-auto px-5 py-2 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        Save Changes
+        {loading ? "Saving..." : "Save Changes"}
       </button>
     </div>
   );
